@@ -1,0 +1,385 @@
+<requestInvoice>
+    <idSm>xxxxxxxxxxxxxxxxxxxxx</idSm>
+    <invoice>
+        <invoiceID value="1190134978" />
+        <invUNP value="1190134978" />
+        <operDate value="28.09.2022 21:26:41" />
+        <invoiceState value="Накладная преfдffаъявлена" />
+        <invLastOper value="28.09.2021 21:26:55" />
+        <invNeedForECP value="0" />
+        <invECPSign value="1" />
+        <invDateCreate value="25.09.2021 05:15:42" />
+        <invDatePres value="28.09.2021 21:26:55" />
+        <invTypeID value="1" />
+        <invTypeName value="Накладная на погрузку" />
+        <invBlankTypeID value="182" />
+        <invBlankType value="94" />
+        <invBlankTypeName value="ГУ-27у (ГУ-27уВЦ) единый" />
+        <invSenderID value="37786" />
+        <invSenderOKPO value="01126016" />
+        <invSenderName value="ПАО &quot;ВЛАДИВОСТОКСКИЙ МОРСКОЙ ТОРГОВЫЙ ПОРТ&quot;" />
+        <invClaimID value="1186875696" />
+        <invClaimNumber value="0037377789" />
+        <invOtprNum value="1" />
+        <invPodNum value="1" />
+        <invSenderAddressID value="29409" />
+        <invSenderAddress value="690065, ПРИМОРСКИЙ КРАЙ, Владивосток, Стрельникова - 9, тел: (423) 2302112" />
+        <invSenderTGNL value="6622" />
+        <invFromCountryCode value="156" />
+        <invFromCountryName value="КИТАЙ" />
+        <invFromStationCode value="980200" />
+        <invFromStationName value="ВЛАДИВОСТОК (ЭКСП.)" />
+        <invFromPortCode value="37786" />
+        <invFromPortName value="ПАО &quot;ВЛАДИВОСТОКСКИЙ МОРСКОЙ ТОРГОВЫЙ ПОРТ&quot;" />
+        <invRecipID value="47475" />
+        <invRecipOKPO value="17652770" />
+        <invRecipName value="ООО ФИРМА &quot;ЭКОДОР&quot;" />
+        <invRecipAddressID value="0" />
+        <invRecipAddress value="129323, Г.МОСКВА , Москва, Снежная - 20 - этаж 2, тел: 4951877818" />
+        <invRecipTGNL value="7659" />
+        <invToCountryCode value="643" />
+        <invToCountryName value="РОССИЯ" />
+        <invToStationCode value="191000" />
+        <invToStationName value="СИЛИКАТНАЯ" />
+        <invToLoadWay value="на п/п ОАО &quot;Подольское ППЖТ&quot;" />
+        <invSendSpeedID value="2" />
+        <invSendSpeedName value="Грузовая" />
+        <invSendKindID value="2" />
+        <invSendKindName value="Контейнерная" />
+        <invPayPlaceID value="3" />
+        <invPayPlaceName value="ЦФТО" />
+        <invPayFormID value="0" />
+        <invPayFormName value="безналичный централизованный" />
+        <invPlanCarTypeID value="163" />
+        <invPlanCarTypeCode value="96" />
+        <invPlanCarTypeName value="ПЛ для КТК длиной  свыше  25,5" />
+        <invPlanCarCount value="0" />
+        <invPlanCarOwnerTypeID value="1" />
+        <invPlanCarOwnerTypeName value="Собственный" />
+        <invPlanContTonnage value="30" />
+        <invContPlanSizeBig value="2" />
+        <invPlanContCount value="1" />
+        <invPlanContOwnerTypeID value="1" />
+        <invPlanContOwnerTypeName value="Собственный" />
+        <invLoadTypeID value="6" />
+        <invLoadTypeName value="ПРИЕМ, СДАЧА С ВОДНОГО ТРАНСПОРТА" />
+        <invAnnounceValue value="0" />
+        <invAVCurrencyID value="1" />
+        <invLoadAssetsID value="1" />
+        <invLoadAssetsName value="Отпр" />
+        <invDispKindID value="14" />
+        <invRespPerson value="Менеджер Елисеева П.Р." />
+        <invPayerCode value="1000230686" />
+        <invPayerId value="64876" />
+        <invPayerName value="ФИТ" />
+        <invScaleTypeID value="3" />
+        <invScaleTypeName value="По трафарету" />
+        <invScalePersonID value="2" />
+        <invScalePersonName value="Отправителем" />
+        <invDeplPerson value="Технолог А.А. Аниканов" />
+        <invDepNormDocID value="10" />
+        <invDepNormDocName value="Техническим условиям размещения и крепления грузов в вагонах и контейнерах от 27.05.2003 № ЦМ - 943" />
+        <invDepCond value="Груз в контейнере размещен и закреплен в соответствии с главой 12 ТУ рис. 1,2,3 правильно. Грузоотправитель ПАО &quot;ВЛАДИВОСТОКСКИЙ МОРСКОЙ ТОРГОВЫЙ ПОРТ&quot;. Грузоотправитель и организация, производящая погрузку и крепление груза, несет ответственность за несоблюдение ТУ." />
+        <invDateLoad value="28.09.2021 00:00:00" />
+        <invDateExpire value="17.10.2021 00:00:00" />
+        <invNumber value="ЭД670798" />
+        <invSignRouteNumCirc value="0" />
+        <invFreight>
+            <freightCode value="441042" />
+            <freightName value="АНТИБИОТИКИ, НЕ ПОИМЕНОВАННЫЕ В АЛФАВИТЕ" />
+            <freightExactName value="АНТИБИОТИКИ, НЕ ПОИМЕНОВАННЫЕ В АЛФАВИТЕ" />
+            <freightGNGID value="24067" />
+            <freightGNGCode value="29419000" />
+            <freightGNGName value="Антибиотики прочие" />
+            <freightAdditional value="Контейнер эксплуатационного парка ООО&quot;ФИТ&quot;.После выгрузки порожний контейнер подлежит возврату на терминал по письменному согласованию с компанией ООО &quot;ФИТ&quot;: DEPO@fesco.com; тел.8(495)7300110,доб 12060" />
+            <freightPackTypeID value="4" />
+            <freightPackTypeName value="Коробки (ящ.)" />
+            <freightPackageCount value="250" />
+            <freightWeight value="6000" />
+            <freightWeightStdGross value="24" />
+            <freightWeightStdNet value="0" />
+            <freightRealWeight value="6000" />
+            <freightDangerSignID value="1" />
+            <freightDangerSignName value="Неопасный груз" />
+        </invFreight>
+        <invDistance>
+            <distCountryCode value="643" />
+            <distCountryName value="РОССИЯ" />
+            <distStationCountryId value="178" />
+            <distStationCode value="980200" />
+            <distStationName value="ВЛАДИВОСТОК (ЭКСП.)" />
+            <distPortCode value="37786" />
+            <distPortName value="ПАО &quot;ВЛАДИВОСТОКСКИЙ МОРСКОЙ ТОРГОВЫЙ ПОРТ&quot;" />
+            <distTrackTypeID value="1" />
+            <distTrackTypeName value="Широкая" />
+            <distTranspTypeID value="1" />
+            <distTranspTypeName value="Ж.Д." />
+            <distMinWay value="9219" />
+            <distRecipID value="37786" />
+            <distRecipOKPO value="01126016" />
+            <distRecipName value="ПАО &quot;ВЛАДИВОСТОКСКИЙ МОРСКОЙ ТОРГОВЫЙ ПОРТ&quot;" />
+            <distRecipAddressID value="29409" />
+            <distRecipAddress value="690065, ПРИМОРСКИЙ КРАЙ, Владивосток, Стрельникова - 9, тел: (423) 2302112" />
+            <distRecipTGNL value="6622" />
+            <distPayerId value="64876" />
+            <distPayerCode value="1000230686" />
+            <distPayerName value="ФИТ" />
+            <distSign value="10101" />
+            <distCarrierID value="1" />
+            <distPowerKind value="1" />
+        </invDistance>
+        <invDistance>
+            <distCountryCode value="643" />
+            <distCountryName value="РОССИЯ" />
+            <distStationCountryId value="178" />
+            <distStationCode value="191000" />
+            <distStationName value="СИЛИКАТНАЯ" />
+            <distLoadWay value="на п/п ОАО &quot;Подольское ППЖТ&quot;" />
+            <distTrackTypeID value="1" />
+            <distTrackTypeName value="Широкая" />
+            <distTranspTypeID value="1" />
+            <distTranspTypeName value="Ж.Д." />
+            <distMinWay value="0" />
+            <distRecipID value="47475" />
+            <distRecipOKPO value="17652770" />
+            <distRecipName value="ООО ФИРМА &quot;ЭКОДОР&quot;" />
+            <distRecipAddressID value="0" />
+            <distRecipAddress value="129323, Г.МОСКВА , Москва, Снежная - 20 - этаж 2, тел: 4951877818" />
+            <distRecipTGNL value="7659" />
+            <distSign value="101010" />
+            <distCarrierID value="1" />
+            <distPowerKind value="1" />
+        </invDistance>
+        <invSPC>
+            <spcTranspClauseID value="1141" />
+            <spcTranspClauseDesc value="Адрес окончательного грузополучателя" />
+            <spcCustomText value="Получ КТК и опл усл терм обр осущ ООО «ТЕТРИС» , ИНН 5009089644, груз для ООО «ТЕТРИС»" />
+        </invSPC>
+        <invSPC>
+            <spcTranspClauseID value="1255" />
+            <spcTranspClauseDesc value="Перевозка грузов по расписанию по договору" />
+        </invSPC>
+        <invSPC>
+            <spcTranspClauseID value="1326" />
+            <spcTranspClauseDesc value="Прикрытие 0-0-1" />
+        </invSPC>
+        <invSPC>
+            <spcTranspClauseID value="398" />
+            <spcTranspClauseDesc value="Охрана" />
+            <spcCustomText value="1" />
+        </invSPC>
+        <invSPC>
+            <spcTranspClauseID value="882" />
+            <spcTranspClauseDesc value="Другие в верхней части накладной" />
+            <spcCustomText value="Вагон 91719666" />
+        </invSPC>
+        <invSPC>
+            <spcTranspClauseID value="9" />
+            <spcTranspClauseDesc value="Легко воспламеняется" />
+        </invSPC>
+        <invSPC>
+            <spcTranspClauseID value="991" />
+            <spcTranspClauseDesc value="Контейнерный поезд" />
+            <spcCustomText value="КОНТЕЙНЕРНЫЙ ПОЕЗД" />
+        </invSPC>
+        <invDOC>
+            <docTypeID value="853" />
+            <docNumber value="Договор охраны № УВО-2734 от 16.11.2011" />
+        </invDOC>
+        <invCar>
+            <carTypeID value="161" />
+            <carOrder value="1" />
+            <carTypeCode value="96" />
+            <carTypeName value="ПЛ для КТК длиной &lt;= 13,4" />
+            <carNumber value="91249243" />
+            <carOwnerCountryCode value="643" />
+            <carOwnerCountryName value="РОССИЯ" />
+            <carOwnerTypeID value="1" />
+            <carOwnerTypeName value="Собственный" />
+            <carOwnerID value="33893" />
+            <carOwnerOKPO value="00203938" />
+            <carOwnerName value="Акционерное общество &quot;АПАТИТ&quot;" />
+            <carTonnage value="73" />
+            <carAxles value="4" />
+            <carWeightDep value="197" />
+            <carWeightGross value="25340" />
+            <carWeightNet value="5640" />
+            <carPriorFreightCode value="391159" />
+            <carPriorFreightName value="КОНТЕЙНЕРЫ УНИВЕРСАЛЬНЫЕ" />
+            <carGuideCount value="0" />
+            <carTankType value="0" />
+            <carRolls value="1" />
+            <carLength value="14.62" />
+        </invCar>
+        <invCar>
+            <carTypeID value="161" />
+            <carOrder value="2" />
+            <carTypeCode value="96" />
+            <carTypeName value="ПЛ для КТК длиной &lt;= 13,4" />
+            <carNumber value="90995233" />
+            <carOwnerCountryCode value="643" />
+            <carOwnerCountryName value="РОССИЯ" />
+            <carOwnerTypeID value="1" />
+            <carOwnerTypeName value="Собственный" />
+            <carOwnerID value="33893" />
+            <carOwnerOKPO value="00203938" />
+            <carOwnerName value="Акционерное общество &quot;АПАТИТ&quot;" />
+            <carTonnage value="73" />
+            <carAxles value="4" />
+            <carWeightDep value="197" />
+            <carWeightGross value="25340" />
+            <carWeightNet value="5640" />
+            <carPriorFreightCode value="391159" />
+            <carPriorFreightName value="КОНТЕЙНЕРЫ УНИВЕРСАЛЬНЫЕ" />
+            <carGuideCount value="0" />
+            <carTankType value="0" />
+            <carRolls value="1" />
+            <carLength value="14.62" />
+        </invCar>
+        <invCar>
+            <carTypeID value="161" />
+            <carOrder value="3" />
+            <carTypeCode value="96" />
+            <carTypeName value="ПЛ для КТК длиной &lt;= 13,4" />
+            <carNumber value="90995588" />
+            <carOwnerCountryCode value="643" />
+            <carOwnerCountryName value="РОССИЯ" />
+            <carOwnerTypeID value="1" />
+            <carOwnerTypeName value="Собственный" />
+            <carOwnerID value="33893" />
+            <carOwnerOKPO value="00203938" />
+            <carOwnerName value="Акционерное общество &quot;АПАТИТ&quot;" />
+            <carTonnage value="73" />
+            <carAxles value="4" />
+            <carWeightDep value="197" />
+            <carWeightGross value="25340" />
+            <carWeightNet value="5640" />
+            <carPriorFreightCode value="391159" />
+            <carPriorFreightName value="КОНТЕЙНЕРЫ УНИВЕРСАЛЬНЫЕ" />
+            <carGuideCount value="0" />
+            <carTankType value="0" />
+            <carRolls value="1" />
+            <carLength value="14.62" />
+        </invCar>
+        <invCont>
+            <contNumber value="MSKU7836451" />
+            <contCarOrder value="1" />
+            <contTonnageID value="10" />
+            <contTonnage value="32" />
+            <contTypeBig value="72" />
+            <contTypeBigName value="Контейнер общего назначения с вентиляцией" />
+            <contSizeBig value="4" />
+            <contWidthFoot value="40" />
+            <contWeightDep value="2170" />
+            <contWeightGross value="30170" />
+            <contPlacesCount value="252" />
+            <contWeightNet value="28000" />
+            <contOwnerCountryCode value="643" />
+            <contOwnerCountryName value="РОССИЯ" />
+            <contOwnerTypeID value="1" />
+            <contOwnerTypeName value="Собственный" />
+            <contOwnerId value="251318" />
+            <contOwnerOKPO value="30709380" />
+            <contOwnerName value="Общество с ограниченной ответственностью &quot;Карелия Палп&quot;" />
+        </invCont>
+        <invCont>
+            <contNumber value="RZDU0261390" />
+            <contCarOrder value="2" />
+            <contTonnageID value="10" />
+            <contTonnage value="32" />
+            <contTypeBig value="72" />
+            <contTypeBigName value="Контейнер общего назначения с вентиляцией" />
+            <contSizeBig value="4" />
+            <contWidthFoot value="40" />
+            <contWeightDep value="2170" />
+            <contWeightGross value="30170" />
+            <contPlacesCount value="252" />
+            <contWeightNet value="28000" />
+            <contOwnerCountryCode value="643" />
+            <contOwnerCountryName value="РОССИЯ" />
+            <contOwnerTypeID value="1" />
+            <contOwnerTypeName value="Собственный" />
+            <contOwnerId value="251318" />
+            <contOwnerOKPO value="30709380" />
+            <contOwnerName value="Общество с ограниченной ответственностью &quot;Карелия Палп&quot;" />
+        </invCont>
+        <invDue>
+            <dueTypeID value="1" />
+            <dueType value="ПРОВОЗНАЯ ПЛАТА, ВЗЫСКАННАЯ ПРИ ОТПРАВЛЕНИИ ЗА ПЕРЕВОЗКУ ГРУЗА ПО Ж.Д. МАТЕРИКА" />
+            <contNumber value="UMLU1007164" />
+            <dueDistanceName value="НОВ.ПОР(ЭКС)" />
+            <dueCalcDistanceName value="от НОВ.ПОР(ЭКС) до ЧЕРЕПОВЕЦ 2" />
+            <dueCalcDistStCode value="035902" />
+            <dueCalcDistStName value="НОВЫЙ ПОРТ (ЭКСП.)" />
+            <distMinWay value="486" />
+            <dueWeightCalc value="0" />
+            <dueAmount value="3425" />
+            <dueCurrencyId value="1" />
+            <dueCurrency value="Рубли РФ" />
+            <dueScheme value="93" />
+            <dueTarifRate value="3806.8" />
+            <dueSumInfr value="3425.31" />
+            <dueTarifCoef value="1" />
+            <dueTaxSum value="685" />
+            <dueTaxAble value="1" />
+            <dueTaxVal value="20" />
+            <dueFreightTarifClass value="3" />
+            <dueTarifDiscount value="0" />
+            <dueTarifPercent value="100" />
+            <dueTarifCode value="1" />
+            <dueIsRZDDue value="1" />
+        </invDue>
+        <invDue>
+            <dueTypeID value="1" />
+            <dueType value="ПРОВОЗНАЯ ПЛАТА, ВЗЫСКАННАЯ ПРИ ОТПРАВЛЕНИИ ЗА ПЕРЕВОЗКУ ГРУЗА ПО Ж.Д. МАТЕРИКА" />
+            <contNumber value="UMLU2003461" />
+            <dueDistanceName value="НОВ.ПОР(ЭКС)" />
+            <dueCalcDistanceName value="от НОВ.ПОР(ЭКС) до ЧЕРЕПОВЕЦ 2" />
+            <dueCalcDistStCode value="035902" />
+            <dueCalcDistStName value="НОВЫЙ ПОРТ (ЭКСП.)" />
+            <distMinWay value="486" />
+            <dueWeightCalc value="0" />
+            <dueAmount value="3425" />
+            <dueCurrencyId value="1" />
+            <dueCurrency value="Рубли РФ" />
+            <dueScheme value="93" />
+            <dueTarifRate value="3806.8" />
+            <dueSumInfr value="3425.31" />
+            <dueTarifCoef value="1" />
+            <dueTaxSum value="685" />
+            <dueTaxAble value="1" />
+            <dueTaxVal value="20" />
+            <dueFreightTarifClass value="3" />
+            <dueTarifDiscount value="0" />
+            <dueTarifPercent value="100" />
+            <dueTarifCode value="1" />
+            <dueIsRZDDue value="1" />
+        </invDue>
+        <invDue>
+            <dueTypeID value="1" />
+            <dueType value="ПРОВОЗНАЯ ПЛАТА, ВЗЫСКАННАЯ ПРИ ОТПРАВЛЕНИИ ЗА ПЕРЕВОЗКУ ГРУЗА ПО Ж.Д. МАТЕРИКА" />
+            <contNumber value="UMLU2012442" />
+            <dueDistanceName value="НОВ.ПОР(ЭКС)" />
+            <dueCalcDistanceName value="от НОВ.ПОР(ЭКС) до ЧЕРЕПОВЕЦ 2" />
+            <dueCalcDistStCode value="035902" />
+            <dueCalcDistStName value="НОВЫЙ ПОРТ (ЭКСП.)" />
+            <distMinWay value="486" />
+            <dueWeightCalc value="0" />
+            <dueAmount value="3425" />
+            <dueCurrencyId value="1" />
+            <dueCurrency value="Рубли РФ" />
+            <dueScheme value="93" />
+            <dueTarifRate value="3806.8" />
+            <dueSumInfr value="3425.31" />
+            <dueTarifCoef value="1" />
+            <dueTaxSum value="685" />
+            <dueTaxAble value="1" />
+            <dueTaxVal value="20" />
+            <dueFreightTarifClass value="3" />
+            <dueTarifDiscount value="0" />
+            <dueTarifPercent value="100" />
+            <dueTarifCode value="1" />
+            <dueIsRZDDue value="1" />
+        </invDue>
+    </invoice>
+</requestInvoice>

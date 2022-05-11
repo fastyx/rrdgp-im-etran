@@ -1,0 +1,51 @@
+variables:
+  GIT_STRATEGY: clone
+
+stages:
+  - build
+  - push
+  - setenv
+  - change_ver
+
+before_script:
+  - if [ "$CI_COMMIT_BRANCH" == "prod" ]; then export VERSION=$(cat package.json | jq -r .version); else VERSION="SNAPSHOT"; fi
+
+build_vars:
+  stage: setenv
+  tags:
+    - gitlab-shell
+  script:
+    - echo "CI_REGISTRY_IMAGE="$CI_REGISTRY_IMAGE
+    - if grep $(echo $CI_REGISTRY_IMAGE | tr -cd [:alnum:]) /tmp/gitlabenvironment; then
+          sed -i 's@'$(echo $CI_REGISTRY_IMAGE | tr -cd [:alnum:])'.*@'$(echo $CI_REGISTRY_IMAGE | tr -cd [:alnum:])'='$CI_REGISTRY_IMAGE':'$VERSION'@g' /tmp/gitlabenvironment;
+      else
+          echo $(echo $CI_REGISTRY_IMAGE | tr -cd [:alnum:])'='$CI_REGISTRY_IMAGE':'$VERSION >> /tmp/gitlabenvironment;
+      fi
+  only:
+    - prod
+
+build_stage:
+  stage: build
+  tags:
+    - gitlab-shell
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE:$VERSION .
+
+push_stage:
+  stage: push
+  tags:
+    - gitlab-shell
+  script:
+    - echo $CI_REGISTRY_PASSWORD | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin 
+    - docker push $CI_REGISTRY_IMAGE:$VERSION
+    - docker logout
+
+trigger-downstream:
+  stage: change_ver
+  variables:
+    UPSTREAM_BRANCH: $CI_REGISTRY_IMAGE
+  trigger:
+      project: dev-rrd-gp/rrd-gp-k8s-integration
+      branch: prod
+  only:
+    - prod

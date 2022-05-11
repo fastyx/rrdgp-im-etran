@@ -1,0 +1,141 @@
+<requestClaim>
+    <idSm>0047861d-bd0d-473f-b437-8ecf60063955</idSm>
+    <claim>
+        <claimID value="0037377790" />
+        <claimStateID value="70" />
+        <claimState value="Согласоhвапна" />
+        <claimNeedForECP value="0" />
+        <claimNumber value="0037377790" />
+        <operDate value="21.07.2021 11:20:56" />
+        <claimRegDate value="14.07.2021 00:00:00" />
+        <clmLastOper value="14.07.2021 22:11:17" />
+        <clmDateCreate value="19.07.2021 00:00:00" />
+        <clmSenderTGNL value="2065" />
+        <clmSenderID value="668450" />
+        <clmSenderOKPO value="34296408" />
+        <clmSenderName value="Общество с ограниченной ответственностью &quot;Вудтрак&quot;" />
+        <clmSenderAddressID value="0" />
+        <clmSenderAddress value="196084,Санкт-Петербург,Московский проспект,150 лит.А,пом.10Н" />
+        <clmStartDate value="19.07.2021 00:00:00" />
+        <clmFinishDate value="31.07.2021 00:00:00" />
+        <clmSendKindID value="1" />
+        <clmSendKindName value="Повагонная" />
+        <clmMsgKindID value="13" />
+        <clmMsgKindName value="Прямое международное через российские погранстанции" />
+        <clmFromCountryCode value="643" />
+        <clmFromCountryName value="Российская Федерация" />
+        <clmFromStationCode value="06910" />
+        <clmFromStationName value="ПЕНО" />
+        <clmFreightGroupCode value="24" />
+        <clmFreightGroupName value="ЛЕСНЫЕ ГРУЗЫ" />
+        <clmCarOwnerTypeID value="4" />
+        <clmCarOwnerTypeName value="Собственный и арендованный" />
+        <clmTypePodID value="13" />
+        <clmTypePodName value="По датам" />
+        <clmPlanType value="1" />
+        <clmSenderAgentID value="2874866" />
+        <clmSenderAgentName value="Постников Алексей Анатольевич" />
+        <clmOtpr>
+            <otprNom value="1" />
+            <otprTypeID value="3" />
+            <otprTypeName value="Групповая" />
+            <otprRecipID value="592152" />
+            <otprRecipOKPO value="592152" />
+            <otprRecipName value="STORA ENSO OYJ" />
+            <otprRecipAddress value="55100,Imatra,Heikinkatu,1" />
+            <otprRecipAddressID value="3" />
+            <otprToCountryCode value="246" />
+            <otprToCountryName value="Финляндская Республика" />
+            <otprToStationCode value="02190" />
+            <otprToStationName value="СВЕТОГОРСК (ЭКСП.)" />
+            <otprExitStationCode value="02190" />
+            <otprExitStationName value="СВЕТОГОРСК (ЭКСП.)" />
+            <otprFreightCode value="08104" />
+            <otprFreightName value="БАЛАНСЫ ХВОЙНЫХ ПОРОД ДЕРЕВА" />
+            <otprFreightGNGID2001 value="31676" />
+            <otprFreightGNGCode value="44032200" />
+            <otprFreightGNGName value="Лесоматериалы из сосны (Pinus spp.), с размером наибольшего поперечного сечения менее 15 см, необработанные, с удаленной или неудаленной корой или заболонью или грубо брусованные или небрусованные (кроме древесных материалов, нарезанные в виде шпал для железнодорожных или трамвайных путей, лесоматериалов, обработанных в виде досок, балок и т.д. и лесоматериалов, обработанные краской, травителями, креозотом или другими консервантами)" />
+            <otprFreightWeight value="265" />
+            <otprCarTypeID value="2" />
+            <otprCarTypeName value="Платформы" />
+            <otprCarTypeCODE value="4100" />
+            <otprCarTypeCODEName value="Платформы универсальные" />
+            <otprCarCount value="5" />
+            <otprTargetCode value="009540" />
+            <otprTargetName value="КАУКОПЯЯ" />
+            <otprNote value="Собст.ваг: ОБЩЕСТВО
+С ОГРАНИЧЕННОЙ
+ОТВЕТСТВЕННОСТЬЮ&quot;
+СТУРА ТРАНСПОРТ&quot;" />
+            <otprAmount value="208165" />
+            <otprDistWay value="947" />
+            <otprCarOwnerID value="199095" />
+            <otprCarOwnerOKPO value="46246054" />
+            <otprCarOwnerName value="ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ&quot;СТУРА ТРАНСПОРТ&quot;" />
+            <otprDaysDelivery value="6" />
+            <otprNumTeleg value="ЦФТОПВ-07/07210204" />
+            <otprNameISP value="Фадеева Ольга Николаевна" />
+            <otprFlags value="000" />
+            <otprWeightLimitL value="0" />
+            <otprWeightLimitH value="0" />
+            <otprGraphPod>
+                <gpPodNum value="1" />
+                <gpPodDate value="19.07.2021 00:00:00" />
+                <gpWeight value="265" />
+                <gpCarCount value="5" />
+            </otprGraphPod>
+        </clmOtpr>
+        <clmPayer>
+            <payerTypeID value="3" />
+            <payerTypeName value="Экспедитор" />
+            <payerID value="199095" />
+            <payerOKPO value="46246054" />
+            <payerName value="ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ&quot;СТУРА ТРАНСПОРТ&quot;" />
+            <payerCode value="1002046174" />
+            <payerCountryCode value="643" />
+            <payerCountryName value="Российская Федерация" />
+            <payerAddress value="188480,КИНГИСЕПП,Ново-порхово,67А,стр.1,пом.1" />
+        </clmPayer>
+        <clmAgreement>
+            <agrName value="Согласование экспедитором" />
+            <agrOrgID value="199095" />
+            <agrOrgName value="ООО&quot;СТУРА ТРАНСПОРТ&quot;" />
+            <agrState value="Согласована" />
+            <agrDate value="14.07.2021 00:00:00" />
+            <agrPost value="Менеджер по логистике" />
+            <agrPerson value="Иваненко Юлия Геннадьевна" />
+        </clmAgreement>
+        <clmAgreement>
+            <agrName value="Согласование дорожного уровня" />
+            <agrOrgID value="2" />
+            <agrOrgName value="ЦФТО ОАО &quot;РЖД&quot;" />
+            <agrState value="Согласована" />
+            <agrDate value="14.07.2021 00:00:00" />
+            <agrRemark value="Автоматическое согласование (ИД фильтра 196)" />
+            <agrPost value="Ведущий технолог (1 группы)" />
+            <agrPerson value="Копысов Юрий Александрович" />
+        </clmAgreement>
+        <clmAgreement>
+            <agrName value="Согласование сетевого уровня" />
+            <agrOrgID value="2" />
+            <agrOrgName value="ЦФТО ОАО &quot;РЖД&quot;" />
+            <agrState value="Согласована окончательно" />
+            <agrDate value="14.07.2021 00:00:00" />
+            <agrPost value="Начальник управления" />
+            <agrPerson value="Щербинина Наталья Геннадьевна" />
+        </clmAgreement>
+        <clmInv>
+            <invOtprNom value="1" />
+            <invId value="1166325819" />
+            <invNumber value="52107352" />
+            <invStateID value="35" />
+            <invState value="В пути" />
+            <invCarCount value="5" />
+            <invToStationCode value="02190" />
+            <invToStationName value="СВЕТОГ(ЭКС)" />
+            <invDateReady value="21.07.2021 09:47:29" />
+            <invCarNumber value="54820568,42018630,42323261,42366385,54813522" />
+            <invMinTonnage value="66" />
+        </clmInv>
+    </claim>
+</requestClaim>

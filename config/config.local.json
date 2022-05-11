@@ -1,0 +1,96 @@
+{
+    "MAIN": {
+        "version": "1.0.103"
+    },
+    "SYSTEM": {
+        "dbTables": {
+            "bundleClaim": "public.bundle_claim",
+            "sourceInformation": "public.source_information",
+            "etranClaim": "public.etran_claim",
+            "etranClaimOtpr": "public.etran_claim_otpr",
+            "etranClaimPayer": "public.etran_claim_payer",
+            "bundleInvoice": "public.bundle_invoice",
+            "bundleCar": "public.bundle_car",
+            "bundleCont": "public.bundle_cont",
+            "etranInvoice": "public.etran_invoice",
+            "rrdgpCar": "public.rrdgp_car",
+            "rrdgpCont": "public.rrdgp_cont",
+            "bundleDocument": "public.bundle_document",
+            "transportation": "public.transportation",
+            "transportationReg": "public.transportation_reg",
+            "objectsTracking": "public.objects_tracking",
+            "eventTracking": "public.event_tracking",
+            "unreportCar": "public.unreport_car",
+            "unreportDocument": "public.unreport_document",
+            "roleOrg": "public.role_org",
+            "tnSootStopStnV": "nsi.tn_soot_stop_stn_v",
+            "tnNormMop": "nsi.tn_norm_mop",
+            "tnProverNorm": "nsi.tn_prover_norm",
+            "askmpnpContractsIdrt": "public.askmpnp_contracts_idrt",
+            "askmpnpContractsLun": "public.askmpnp_contracts_lun",
+            "askmpnpContracts": "public.askmpnp_contracts",
+            "regMessage": "public.reg_message",
+            "regSql": "public.reg_sql",
+            "dues": "public.dues"
+        },
+        "dbFunctions": {
+            "editTracking": "public.edit_tracking",
+            "violationReg": "public.violation_reg",
+            "removeTracking": "public.remove_tracking"
+        },
+        "dbConnections": {
+            "dbrzd": {
+                "host": "127.0.0.1",
+                "port": "5432",
+                "database": "dbrzd",
+                "user": "fastyx",
+                "password": "fender"
+            }
+        },
+        "dbConfig": {
+            "max": 2,
+            "idleTimeoutMillis": 30000,
+            "connectionTimeoutMillis": 2000
+        },
+        "restConfig": {
+            "invoke": {
+                "host": "localhost",
+                "port": "3001",
+                "name": "v1/invoke"
+            },
+            "etranService": {
+                "host": "localhost",
+                "port": "3030",
+                "name": "api/etran/claim"
+            },
+            "isrun": {
+                "name": "appinfo/isrun"
+            }
+        },
+        "privateCollection": "_implicit_org_Org1MSP",
+        "loggerLevel": "info",
+        "kafkaConfig": {
+            "producer": {
+                "status": 0,
+                "nodes": "192.168.8.121:9092, 192.168.8.97:9092"
+            },
+            "consumer": {
+                "nodes": "192.168.8.121:9092, 192.168.8.97:9092",
+                "options": {
+                    "topic": "etranTopic",
+                    "offset": 0,
+                    "partition": 0,
+                    "autoCommit": false,
+                    "autoCommitIntervalMs": 5000,
+                    "fetchMinBytes": 1,
+                    "groupId": "kafka-etran",
+                    "fetchMaxWaitMs": 100,
+                    "fetchMaxBytes": 37748736,
+                    "fromOffset": true,
+                    "encoding": "utf8",
+                    "keyEncoding": "utf8"
+                }
+            }
+        }
+    }
+}
