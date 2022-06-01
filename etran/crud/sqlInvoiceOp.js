@@ -55,30 +55,42 @@ exports.sqlInvoiceOp = async function (invoice, client, config, response) {
         var sql = `INSERT INTO ${config.SYSTEM.dbTables.sourceInformation} 
                         (
                         id_sm, 
-                        id_sm_dop, 
                         op_date, 
                         state_id, 
                         check_sum,  
                         id_sm_invoice, 
+                        id_history,
+                        id_sm_doc,
                         document_type, 
+                        cancellation,
                         document_data,
                         document_number,
                         document_state_id,
-                        document_state 
+                        document_state,
+                        category,
+                        category_name,
+                        adj_sys_id,    
+                        dop_check_sum
                         ) VALUES 
-                        ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`;
+                        ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11,$12,$13,$14,$15,$16,$17)`;
         await client.query(sql, [
-            invoice.idSm,               //1
-            '',                         //2
-            invoice.operDate,           //3
-            invoice.stateTransaction,   //4
-            invoice.checkSum,           //5
-            invoice.idSmInvoice,        //6
-            'GU27',                     //7
-            invoice.inputDocument,      //8
-            invoice.invNumber,          //9
-            invoice.invoiceStateID,     //10
-            invoice.invoiceState        //11      
+            invoice.idSm,
+            invoice.operDate,
+            invoice.stateTransaction,
+            invoice.checkSum,
+            invoice.idSmInvoice,
+            123456789,
+            null,
+            'GU27',
+            null,
+            invoice.inputDocument,
+            invoice.invNumber,
+            invoice.invoiceStateID,
+            invoice.invoiceState,
+            null,
+            null,
+            null,
+            null
         ]);
     } catch (e) {
         // Проверка на 803 ~ 23505
@@ -88,7 +100,7 @@ exports.sqlInvoiceOp = async function (invoice, client, config, response) {
         }
     }
 
-    // select insert tracking bundle_invoice
+    // select insert tracking bundle_invoice (+ отреинжинированно)
     try {
         var sql = `SELECT id_sm_invoice from ${config.SYSTEM.dbTables.bundleInvoice} WHERE id_sm=($1) and inv_unp=($2)`;
         result = await client.query(sql, [invoice.idSm, invoice.invUnp]);
@@ -97,17 +109,15 @@ exports.sqlInvoiceOp = async function (invoice, client, config, response) {
                 var sql = `INSERT INTO ${config.SYSTEM.dbTables.bundleInvoice} 
                 (
                 id_sm,
-                id_sm_dop,
                 id_sm_invoice,
                 inv_number,
                 inv_unp
                 ) VALUES 
-                ($1, $2, $3, $4, $5)`;
+                ($1, $2, $3, $4)`;
                 await client.query(sql, [
                     invoice.idSm,           //1
-                    '',                     //2
                     invoice.idSmInvoice,    //3
-                    invoice.invNumber,      //3.5
+                    invoice.invNumber,      //3
                     invoice.invUnp          //4
                 ]);
 
@@ -143,18 +153,20 @@ exports.sqlInvoiceOp = async function (invoice, client, config, response) {
                         var sql = `INSERT INTO ${config.SYSTEM.dbTables.bundleCar} 
                         (
                         id_sm,
-                        id_sm_dop,
                         id_sm_invoice,
+                        id_sm_doc,
                         id_sm_car,
-                        car_number
+                        car_number,
+                        pr_link
                         ) VALUES 
-                        ($1, $2, $3, $4, $5)`;
+                        ($1, $2, $3, $4, $5, $6)`;
                         await client.query(sql, [
-                            invoice.idSm,           //1
-                            '',                     //2
-                            invoice.idSmInvoice,    //3
-                            invoice.car[i].idSmCar,     //4
-                            invoice.car[i].carNumber    //5    
+                            invoice.idSm,
+                            invoice.idSmInvoice,
+                            null,
+                            invoice.car[i].idSmCar,
+                            invoice.car[i].carNumber,
+                            18
                         ]);
                     } catch (e) {
                         reg_info = `Invoice. sqlInvoiceOp: ошибка при INSERT ${config.SYSTEM.dbTables.bundleCar} carNumber=${invoice.car[i].carNumber}`;
@@ -233,16 +245,14 @@ exports.sqlInvoiceOp = async function (invoice, client, config, response) {
                         var sql = `INSERT INTO ${config.SYSTEM.dbTables.bundleCont} 
                         (
                         id_sm,
-                        id_sm_dop,
                         id_sm_invoice,
                         id_sm_car,  
                         id_sm_cont,
                         cont_number
                         ) VALUES 
-                        ($1, $2, $3, $4, $5, $6)`;
+                        ($1, $2, $3, $4, $5)`;
                         await client.query(sql, [
                             invoice.idSm,                           //1
-                            '',                                     //2
                             invoice.idSmInvoice,                    //3
                             invoice.car[i].idSmCar,                 //4
                             invoice.car[i].conts[j].idSmCont,       //5
@@ -403,28 +413,28 @@ exports.sqlInvoiceOp = async function (invoice, client, config, response) {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Снятие со слежения контейнеров (пока только delet из таблиц), отсутствующих в очередной накладной
     try {
-         var sql = `SELECT * from ${config.SYSTEM.dbTables.bundleCont} WHERE id_sm=($1) and id_sm_invoice=($2)`;
-         result = await client.query(sql, [invoice.idSm, invoice.idSmInvoice]);
-         if (result.rowCount !== 0) {
-             for (var res of result.rows) {
-                 const contObj = invoice.cont.find(c => c.contNumber === res.cont_number);
-                 if (!contObj) {
-                     try {
-                         var sql = `DELETE from ${config.SYSTEM.dbTables.bundleCont} WHERE id_sm=($1) and id_sm_invoice=($2) and id_sm_cont=($3)`;
-                         await client.query(sql, [invoice.idSm, invoice.idSmInvoice, res.id_sm_cont]);
-                         var sql = `DELETE from ${config.SYSTEM.dbTables.rrdgpCont} WHERE id_sm=($1)  and id_sm_cont=($2)`;
-                         await client.query(sql, [invoice.idSm, res.id_sm_cont]);
-                     } catch (e) {
-                         reg_info = `Invoice. sqlInvoiceOp: ошибка при удалении из ${config.SYSTEM.dbTables.bundleCont} и ${config.SYSTEM.dbTables.rrdgpCont}`;
-                         reg_init.regError(invoice.idSm, 27, invoice.checkSum, 1, 1, invoice.invoiceStateID, reg_info, sql, null, e);
-                     }
-                 }
-             }
-         }
-     } catch (e) {
-         reg_info = `Invoice. sqlInvoiceOp: ошибка при SELECT ${config.SYSTEM.dbTables.bundleCar} `;
-         reg_init.regError(invoice.idSm, 27, invoice.checkSum, 1, 1, invoice.invoiceStateID, reg_info, sql, null, e);
-     }
+        var sql = `SELECT * from ${config.SYSTEM.dbTables.bundleCont} WHERE id_sm=($1) and id_sm_invoice=($2)`;
+        result = await client.query(sql, [invoice.idSm, invoice.idSmInvoice]);
+        if (result.rowCount !== 0) {
+            for (var res of result.rows) {
+                const contObj = invoice.cont.find(c => c.contNumber === res.cont_number);
+                if (!contObj) {
+                    try {
+                        var sql = `DELETE from ${config.SYSTEM.dbTables.bundleCont} WHERE id_sm=($1) and id_sm_invoice=($2) and id_sm_cont=($3)`;
+                        await client.query(sql, [invoice.idSm, invoice.idSmInvoice, res.id_sm_cont]);
+                        var sql = `DELETE from ${config.SYSTEM.dbTables.rrdgpCont} WHERE id_sm=($1)  and id_sm_cont=($2)`;
+                        await client.query(sql, [invoice.idSm, res.id_sm_cont]);
+                    } catch (e) {
+                        reg_info = `Invoice. sqlInvoiceOp: ошибка при удалении из ${config.SYSTEM.dbTables.bundleCont} и ${config.SYSTEM.dbTables.rrdgpCont}`;
+                        reg_init.regError(invoice.idSm, 27, invoice.checkSum, 1, 1, invoice.invoiceStateID, reg_info, sql, null, e);
+                    }
+                }
+            }
+        }
+    } catch (e) {
+        reg_info = `Invoice. sqlInvoiceOp: ошибка при SELECT ${config.SYSTEM.dbTables.bundleCar} `;
+        reg_init.regError(invoice.idSm, 27, invoice.checkSum, 1, 1, invoice.invoiceStateID, reg_info, sql, null, e);
+    }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Снятие со слежения вагонов, отсутствующих в очередной накладной

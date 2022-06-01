@@ -154,28 +154,28 @@ exports.processDocument452B = async function (in_req, in_res, in_client, in_conf
                     if (Number(stateId) === 548) {
                         // Подача   invFromStationCode = stationCode    Груженая накладная       
                         if (opType === 1 && attrExportCode === 1 && result.rows[j].status_invoice === 2) {
-                            resCarArray.push({ carNumber: result.rows[j].car_number, idSmCar: result.rows[j].id_sm_car });
+                            resCarArray.push({ carNumber: result.rows[j].car_number, idSmCar: result.rows[j].id_sm_car, idSmInvoice: result.rows[j].id_sm_invoice });
                             handleOpArray.push({ handleOp: "14a" });
                             logger.debug(`Document: carNumber=${result.rows[j].car_number} найден. idSmCar=${result.rows[j].id_sm_car}; transaction=handleOp14a; attrExportCode=${attrExportCode}; statusInvoice=${result.rows[j].status_invoice}`);
                             break;
                         }
                         // Подача   invToStationCode = stationCode      Груженая накладная       
                         else if (opType === 1 && attrExportCode === 2 && result.rows[j].status_invoice === 2) {
-                            resCarArray.push({ carNumber: result.rows[j].car_number, idSmCar: result.rows[j].id_sm_car });
+                            resCarArray.push({ carNumber: result.rows[j].car_number, idSmCar: result.rows[j].id_sm_car, idSmInvoice: result.rows[j].id_sm_invoice });
                             handleOpArray.push({ handleOp: "58a" });
                             logger.debug(`Document: carNumber=${result.rows[j].car_number} найден. idSmCar=${result.rows[j].id_sm_car}; transaction=handleOp58a; attrExportCode=${attrExportCode}; statusInvoice=${result.rows[j].status_invoice}`);
                             break;
                         }
                         // Уборка   invFromStationCode = stationCode    Груженая накладная
                         else if (opType === 2 && attrExportCode === 1 && result.rows[j].status_invoice === 2) {
-                            resCarArray.push({ carNumber: result.rows[j].car_number, idSmCar: result.rows[j].id_sm_car });
+                            resCarArray.push({ carNumber: result.rows[j].car_number, idSmCar: result.rows[j].id_sm_car, idSmInvoice: result.rows[j].id_sm_invoice });
                             handleOpArray.push({ handleOp: "26a" });
                             logger.debug(`Document: carNumber=${result.rows[j].car_number} найден. idSmCar=${result.rows[j].id_sm_car}; transaction=handleOp26a; attrExportCode=${attrExportCode}; statusInvoice=${result.rows[j].status_invoice}`);
                             break;
                         }
                         // Уборка   invFromStationCode = stationCode    Порожняя накладная
                         else if (opType === 2 && attrExportCode === 1 && result.rows[j].status_invoice === 1) {
-                            resCarArray.push({ carNumber: result.rows[j].car_number, idSmCar: result.rows[j].id_sm_car });
+                            resCarArray.push({ carNumber: result.rows[j].car_number, idSmCar: result.rows[j].id_sm_car, idSmInvoice: result.rows[j].id_sm_invoice });
                             handleOpArray.push({ handleOp: "126a" });
                             logger.debug(`Document: carNumber=${result.rows[j].car_number} найден. idSmCar=${result.rows[j].id_sm_car}; transaction=handleOp126a; attrExportCode=${attrExportCode}; statusInvoice=${result.rows[j].status_invoice}`);
                             break;
@@ -188,28 +188,28 @@ exports.processDocument452B = async function (in_req, in_res, in_client, in_conf
                     else if (Number(stateId) === 699 || Number(stateId) === 697) {
                         // Подача   invFromStationCode = stationCode    Груженая накладная       
                         if (opType === 1 && attrExportCode === 1 && result.rows[j].status_invoice === 2) {
-                            resCarArray.push({ carNumber: result.rows[j].car_number, idSmCar: result.rows[j].id_sm_car });
+                            resCarArray.push({ carNumber: result.rows[j].car_number, idSmCar: result.rows[j].id_sm_car, idSmInvoice: result.rows[j].id_sm_invoice });
                             handleOpArray.push({ handleOp: "14b" });
                             logger.debug(`Document: carNumber=${result.rows[j].car_number} найден. idSmCar=${result.rows[j].id_sm_car}; transaction=handleOp14b; attrExportCode=${attrExportCode}; statusInvoice=${result.rows[j].status_invoice}`);
                             break;
                         }
                         // Подача   invToStationCode = stationCode      Груженая накладная       
                         else if (opType === 1 && attrExportCode === 2 && result.rows[j].status_invoice === 2) {
-                            resCarArray.push({ carNumber: result.rows[j].car_number, idSmCar: result.rows[j].id_sm_car });
+                            resCarArray.push({ carNumber: result.rows[j].car_number, idSmCar: result.rows[j].id_sm_car, idSmInvoice: result.rows[j].id_sm_invoice });
                             handleOpArray.push({ handleOp: "58b" });
                             logger.debug(`Document: carNumber=${result.rows[j].car_number} найден. idSmCar=${result.rows[j].id_sm_car}; transaction=handleOp58b; attrExportCode=${attrExportCode}; statusInvoice=${result.rows[j].status_invoice}`);
                             break;
                         }
                         // Уборка   invFromStationCode = stationCode    Груженая накладная
                         else if (opType === 2 && attrExportCode === 1 && result.rows[j].status_invoice === 2) {
-                            resCarArray.push({ carNumber: result.rows[j].car_number, idSmCar: result.rows[j].id_sm_car });
+                            resCarArray.push({ carNumber: result.rows[j].car_number, idSmCar: result.rows[j].id_sm_car, idSmInvoice: result.rows[j].id_sm_invoice });
                             handleOpArray.push({ handleOp: "26b" });
                             logger.debug(`Document: carNumber=${result.rows[j].car_number} найден. idSmCar=${result.rows[j].id_sm_car}; transaction=handleOp26b; attrExportCode=${attrExportCode}; statusInvoice=${result.rows[j].status_invoice}`);
                             break;
                         }
                         // Уборка   invFromStationCode = stationCode    Порожняя накладная
                         else if (opType === 2 && attrExportCode === 1 && result.rows[j].status_invoice === 1) {
-                            resCarArray.push({ carNumber: result.rows[j].car_number, idSmCar: result.rows[j].id_sm_car });
+                            resCarArray.push({ carNumber: result.rows[j].car_number, idSmCar: result.rows[j].id_sm_car, idSmInvoice: result.rows[j].id_sm_invoice });
                             handleOpArray.push({ handleOp: "126b" });
                             logger.debug(`Document: carNumber=${result.rows[j].car_number} найден. idSmCar=${result.rows[j].id_sm_car}; transaction=handleOp126b; attrExportCode=${attrExportCode}; statusInvoice=${result.rows[j].status_invoice}`);
                             break;
@@ -221,19 +221,19 @@ exports.processDocument452B = async function (in_req, in_res, in_client, in_conf
                     }
                     else if (Number(stateId) === 1760) {
                         if (attrExportCode === 1 && result.rows[j].status_invoice === 1) {
-                            resCarArray.push({ carNumber: result.rows[j].car_number, idSmCar: result.rows[j].id_sm_car });
+                            resCarArray.push({ carNumber: result.rows[j].car_number, idSmCar: result.rows[j].id_sm_car, idSmInvoice: result.rows[j].id_sm_invoice });
                             handleOpArray.push({ handleOp: "117" });
                             logger.debug(`Document: carNumber=${result.rows[j].car_number} найден. idSmCar=${result.rows[j].id_sm_car}; transaction=handleOp117; attrExportCode=${attrExportCode}; statusInvoice=${result.rows[j].status_invoice}`);
                             break;
                         }
                         else if (attrExportCode === 1 && result.rows[j].status_invoice === 2) {
-                            resCarArray.push({ carNumber: result.rows[j].car_number, idSmCar: result.rows[j].id_sm_car });
+                            resCarArray.push({ carNumber: result.rows[j].car_number, idSmCar: result.rows[j].id_sm_car, idSmInvoice: result.rows[j].id_sm_invoice });
                             handleOpArray.push({ handleOp: "17" });
                             logger.debug(`Document: carNumber=${result.rows[j].car_number} найден. idSmCar=${result.rows[j].id_sm_car}; transaction=handleOp17; attrExportCode=${attrExportCode}; statusInvoice=${result.rows[j].status_invoice}`);
                             break;
                         }
                         else if (attrExportCode === 2 && result.rows[j].status_invoice === 2) {
-                            resCarArray.push({ carNumber: result.rows[j].car_number, idSmCar: result.rows[j].id_sm_car });
+                            resCarArray.push({ carNumber: result.rows[j].car_number, idSmCar: result.rows[j].id_sm_car, idSmInvoice: result.rows[j].id_sm_invoice });
                             handleOpArray.push({ handleOp: "60" });
                             logger.debug(`Document: carNumber=${result.rows[j].car_number} найден. idSmCar=${result.rows[j].id_sm_car}; transaction=handleOp60; attrExportCode=${attrExportCode}; statusInvoice=${result.rows[j].status_invoice}`);
                             break;

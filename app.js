@@ -19,7 +19,9 @@ app.listen(config.SYSTEM.restConfig.etranService.port, () => {
     logger.info(`Server: сервер запущен. Порт: ${config.SYSTEM.restConfig.etranService.port}`);
     logger.info(JSON.stringify(config));
 
-    require("./routes/post_routes/process.js")(app);
+    let httpRequestDurationMicroseconds = null;
+    require("./routes/get_routes/prom.js")(app, httpRequestDurationMicroseconds);
+    require("./routes/post_routes/process.js")(app, httpRequestDurationMicroseconds);
     require("./routes/get_routes/isrun.js")(app);
     require("./routes/post_routes/processKafka.js")(app);
     require("./kafka/consumer.js")(app);

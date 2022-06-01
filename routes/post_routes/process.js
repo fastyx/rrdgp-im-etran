@@ -4,12 +4,15 @@ const config = require('../../init_config');
 const pool = require('../../init_db_pool');
 const bh = require('../../etran/baseHandler');
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var appRouter = async function (app) {
     app.post(`/${config.SYSTEM.restConfig.etranService.name}`, async function (req, res) {
+        const end = httpRequestDurationMicroseconds.startTimer();
+        const route = req.route.path;
+
         var eventResult = `<responseClaim><status>1</status><message>Error in request process</message></responseClaim>`;   // Default response (filled manually for reliability)
         try {
             logger.debug(JSON.stringify(config));
-            logger.debug(req.rawBody);
 
             client = await pool.connect();
             try {
@@ -21,6 +24,9 @@ var appRouter = async function (app) {
             logger.error(e);
         } finally {
             await res.send(eventResult);
+
+            // End timer and add labels
+            end({ route, code: res.statusCode, method: req.method });
         }
     });
 }

@@ -65,31 +65,43 @@ exports.sqlClaimOp = async function (claim, client, config, response) {
 
         var sql_ins = `INSERT INTO ${config.SYSTEM.dbTables.sourceInformation} 
         (
-        id_sm,
-        id_sm_dop,
-        op_date,
-        state_id,
-        check_sum,
-        id_sm_invoice,
-        document_type,
-        document_data,
-        document_number,
-        document_state_id,
-        document_state
-        ) VALUES 
-        ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`;
+            id_sm, 
+            op_date, 
+            state_id, 
+            check_sum,  
+            id_sm_invoice, 
+            id_history,
+            id_sm_doc,
+            document_type, 
+            cancellation,
+            document_data,
+            document_number,
+            document_state_id,
+            document_state,
+            category,
+            category_name,
+            adj_sys_id,    
+            dop_check_sum
+            ) VALUES 
+            ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11,$12,$13,$14,$15,$16,$17)`;
         await client.query(sql_ins, [
-            claim.idSm,                 //1
-            '',                         //2
-            claim.operDate,             //3
-            claim.stateTransaction,     //4
-            claim.checkSum,             //5
-            null,                       //6
-            'GU12',                     //7
-            claim.inputDocument,        //8
-            document_inf,               //9
-            claim.claimStateID,         //10
-            claim.claimState            //11
+            claim.idSm,                 
+            claim.operDate,             
+            claim.stateTransaction,     
+            claim.checkSum,             
+            null,                       
+            123456789,
+            null,
+            'GU12',                    
+            null,
+            claim.inputDocument,        
+            document_inf,               
+            claim.claimStateID,        
+            claim.claimState,           
+            null,
+            null,
+            null,
+            null
         ]);
     } catch (e) {
         // Проверка на 803 ~ 23505

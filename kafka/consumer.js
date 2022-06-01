@@ -17,21 +17,21 @@ if (config.SYSTEM.kafkaConfig.consumer.active) {
                     // topic name
                     topic: config.SYSTEM.kafkaConfig.consumer.options.topic,
                     // start offset
-                    offset: config.SYSTEM.kafkaConfig.consumer.options.offset,
+                    offset: Number(config.SYSTEM.kafkaConfig.consumer.options.offset),
                     // queue partition
-                    partition: config.SYSTEM.kafkaConfig.consumer.options.partition,
+                    partition: Number(config.SYSTEM.kafkaConfig.consumer.options.partition),
                     // auto commit
                     autoCommit: config.SYSTEM.kafkaConfig.consumer.options.autoCommit,
                     // commit interval
-                    autoCommitIntervalMs: config.SYSTEM.kafkaConfig.consumer.options.autoCommitIntervalMs,
+                    autoCommitIntervalMs: Number(config.SYSTEM.kafkaConfig.consumer.options.autoCommitIntervalMs),
                     //consumer group id
                     groupId: config.SYSTEM.kafkaConfig.consumer.options.groupId,
                     // The max wait time is the maximum amount of time in milliseconds to block waiting if insufficient data is available at the time the request is issued, default 100ms
-                    fetchMaxWaitMs: config.SYSTEM.kafkaConfig.consumer.options.fetchMaxWaitMs,
+                    fetchMaxWaitMs: Number(config.SYSTEM.kafkaConfig.consumer.options.fetchMaxWaitMs),
                     // This is the minimum number of bytes of messages that must be available to give a response, default 1 byte
-                    fetchMinBytes: config.SYSTEM.kafkaConfig.consumer.options.fetchMinBytes,
+                    fetchMinBytes: Number(config.SYSTEM.kafkaConfig.consumer.options.fetchMinBytes),
                     // The maximum bytes to include in the message set for this partition. This helps bound the size of the response.
-                    fetchMaxBytes: config.SYSTEM.kafkaConfig.consumer.options.fetchMaxBytes,
+                    fetchMaxBytes: Number(config.SYSTEM.kafkaConfig.consumer.options.fetchMaxBytes),
                     // If set true, consumer will fetch message from the given offset in the payloads
                     fromOffset: config.SYSTEM.kafkaConfig.consumer.options.fromOffset,
                     // If set to 'buffer', values will be returned as raw buffer objects.

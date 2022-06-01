@@ -52,7 +52,7 @@ exports.handleOpDocument = async function (req, res, client, config, xmlCfg, idS
             cars: resCarArray                                                                   //Работаем с тем массивом вагонов, которые получены после удаления тех, что не на слежении
         };
     }
-    let jsonObject = { transaction: guDoc.transaction, contractId: idSm, payload: payload, opts: guDoc.opts };
+    let jsonObject = { transaction: guDoc.transaction, contractId: idSm, contractIdInvoice: null, payload: payload, opts: guDoc.opts };
     logger.info("Sended to BlockChain: " + JSON.stringify(jsonObject));
 
     //Вызываем REST-сервис записи в БЧ
@@ -71,103 +71,6 @@ exports.handleOpDocument = async function (req, res, client, config, xmlCfg, idS
 
         // Запись в Postgres 
         await sqlDoc.sqlDocumentOp(guDoc, client, config, idSm, response, resCarArray, cumDue);
-
-        if (guDoc.stateTransaction === 177 || guDoc.stateTransaction === 178) {
-
-            //Формируем объект для передачи
-            payload = {
-                privateName: config.SYSTEM.privateCollection
-                //privateName: '_implicit_org_Org1MSP',
-                //privateName: 'CollTest1',
-                //privateName: 'CollTest2'
-            };
-            dues = new Array();
-
-            if (guDoc.stateTransaction === 177) {
-                logger.debug(`handleOpDocument: формирование due для GU-46`);
-                due = {
-                    //checkSum: guDoc.checkSum,
-                    idSmDoc: guDoc.idSmDoc,
-                    dueDocTypeId: guDoc.docTypeId,
-                    dueDocId: guDoc.docId,
-                    dueDocNumber: guDoc.docNumber,
-                    dueTypeCode: guDoc.dueTypeCode[0],
-                    dueAmount: guDoc.dueAmount[0],
-                    payerOKPO: guDoc.payerOKPO,
-                    recipOKPO: "00083262",
-                }
-                dues.push(due);
-
-                for (let i = 0; i < resCarArray.length; i++) {
-                    // пишем только те вагоны, у которых есть carDueAmount
-                    if (resCarArray[i].carDueAmount !== null) {
-                        due = {
-                            //checkSum: guDoc.checkSum,
-                            idSmDoc: guDoc.idSmDoc,
-                            dueDocTypeId: guDoc.docTypeId,
-                            dueDocId: guDoc.docId,
-                            dueDocNumber: guDoc.docNumber,
-                            dueTypeCode: -999,
-                            carNumber: resCarArray[i].carNumber,
-                            idSmCar: resCarArray[i].idSmCar,
-                            dueAmount: resCarArray[i].carDueAmount,
-                            payerOKPO: guDoc.vpuPayerOKPO,
-                            recipOKPO: "00083262",
-                        }
-                        dues.push(due);
-                    }
-                }
-            }
-            else if (guDoc.stateTransaction === 178) {
-                logger.debug(`handleOpDocument: формирование due для FDU-92`);
-                for (let i = 0; i < cumDue.length; i++) {
-                    due = {
-                        //checkSum: guDoc.checkSum,
-                        idSmDoc: guDoc.idSmDoc,
-                        dueDocTypeId: guDoc.docTypeId,
-                        dueDocId: guDoc.docId,
-                        dueDocNumber: guDoc.docNumber,
-                        dueDateAmount: cumDue[i].dueDateAmount,
-                        dueTypeCode: cumDue[i].dueTypeCode,
-                        dueAmount: cumDue[i].dueAmount,
-                        invNumber: cumDue[i].invNumber,
-                        invoiceID: cumDue[i].invoiceID,
-                        payerOKPO: guDoc.payerOKPO,
-                        dueRowNumber: i,
-                        dueInfo: cumDue[i].dueInfo,
-                        recipOKPO: "00083262",
-                    }
-                    dues.push(due);
-                }
-            }
-            duesList = {
-                dues: dues,
-            };
-            transient = {
-                dueList: duesList
-            };
-            let jsonObject = { transaction: guDoc.dueTransaction, contractId: idSm, payload: payload, transient: transient, opts: guDoc.opts };
-            logger.info("Sended to BlockChain: " + JSON.stringify(jsonObject));
-
-            //Вызываем REST-сервис записи в БЧ
-            res.set('Content-Type', 'text/xml');
-            try {
-                response = await axios.post(`http://${config.SYSTEM.restConfig.invoke.host}:${config.SYSTEM.restConfig.invoke.port}/${config.SYSTEM.restConfig.invoke.name}`, jsonObject);
-            } catch (e) {
-                reg_info = `Document. ProcessDocument4692: ошибка при вызове сервиса ${JSON.stringify(e)}`;
-                reg_init.regError(idSm, guDoc.docTypeId, guDoc.checkSum, 0, 1, guDoc.stateTransaction, reg_info, jsonObject, null, e);
-                return xml({ responseClaim: [{ status: 0 }, { message: reg_info}] });     // ошибки по due не пишем. Потом вообще этот вызов уберется
-            }
-            if (response.data.code === 0) {
-                // Регистрация
-                reg_init.regMessage(idSm, guDoc.docTypeId, null, guDoc.checkSum, 3, 1, guDoc.stateTransaction, guDoc.docNumber, guDoc.docId);
-            }
-            else {
-                reg_info = `Document. ProcessDocument4692: response.data.code !== 0:${JSON.stringify(response.data)}`;
-                reg_init.regError(idSm, guDoc.docTypeId, guDoc.checkSum, 2, 1, guDoc.stateTransaction, reg_info, jsonObject, null, null);
-                return xml({ responseClaim: [{ status: 0 }, { message: reg_info }] });     // ошибки по due не пишем. Потом вообще этот вызов уберется
-            }
-        }
     }
     else {
         reg_info = `Document. ProcessDocument4692: response.data.code !== 0:${JSON.stringify(response.data)}`;

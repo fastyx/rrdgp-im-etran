@@ -13,20 +13,24 @@ exports.sqlDocumentOp = async function (document, client, config, idSm, response
             try {
                 var sql = `INSERT INTO ${config.SYSTEM.dbTables.bundleDocument} (
                     id_sm,
-                    id_sm_dop,
                     id_sm_doc,
+                    id_sm_invoice,
                     id_sm_car,
                     id_sm_cont,
+                    pr_doc,
+                    pr_link,
                     doc_id,
                     doc_number
                 ) 
-                VALUES ($1,$2,$3,$4,$5,$6,$7)`
+                VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`
                 await client.query(sql, [
                     idSm,                                   //1
-                    '',                                     //2
                     document.idSmDoc,                       //3
+                    null,
                     null,                                   //4
                     null,                                   //5
+                    null,
+                    null,
                     document.docId,                         //6
                     document.docNumber                      //7
 
@@ -47,30 +51,47 @@ exports.sqlDocumentOp = async function (document, client, config, idSm, response
     try {
         var sql = `INSERT INTO ${config.SYSTEM.dbTables.sourceInformation} 
         (
-            id_sm,
-            id_sm_dop,
-            op_date,
-            state_id,
-            check_sum,
-            id_sm_invoice,
-            document_type,
+            id_sm, 
+            op_date, 
+            state_id, 
+            check_sum,  
+            id_sm_invoice, 
+            id_history,
+            id_sm_doc,
+            document_type, 
+            cancellation,
             document_data,
-            document_number
-        ) 
-        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`;
+            document_number,
+            document_state_id,
+            document_state,
+            category,
+            category_name,
+            adj_sys_id,    
+            dop_check_sum
+            ) VALUES 
+            ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11,$12,$13,$14,$15,$16,$17)`;
         await client.query(sql, [
             idSm,                       //1
-            '',                         //2
             document.operDate,          //3
             document.stateTransaction,  //4
             document.checkSum,          //5
             null,                       //6
+            123456789,
             document.docName,           //7
+            document.docTypeId,
+            null,
             document.inputDocument,     //8
-            document.docNumber          //9
+            document.docNumber,          //9
+            document.docTypeId,
+            null,
+            null,
+            null,
+            null,
+            null
         ]);
 
     } catch (e) {
+        console.log(e)
         // Проверка на 803 ~ 23505
         if (e.code !== 23505) {
             reg_info = `Document. sqlDocumentOp: ошибка при INSERT в ${config.SYSTEM.dbTables.sourceInformation} idSm=${idSm}`;

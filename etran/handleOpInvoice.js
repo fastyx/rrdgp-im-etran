@@ -138,7 +138,7 @@ exports.handleOpInvoice = async function (req, res, client, config, xmlCfg, invo
         invDateEnd: invoice.epochInvDateEnd,                                        //handleOp2155
         cars: invoice.car
     };
-    let jsonObject = { transaction: invoice.transaction, contractId: invoice.idSm, payload: payload, opts: invoice.opts };
+    let jsonObject = { transaction: invoice.transaction, contractId: invoice.idSm, contractIdInvoice: invoice.idSmInvoice, payload: payload, opts: invoice.opts };
 
     logger.info(`handleOpInvoice: Sended to BlockChain: ${JSON.stringify(jsonObject)}`);
 
@@ -163,50 +163,6 @@ exports.handleOpInvoice = async function (req, res, client, config, xmlCfg, invo
         reg_info = `handleOpInvoice. response.data.code !== 0:${JSON.stringify(response.data)}`;
         reg_init.regError(invoice.idSm, 27, invoice.checkSum, 2, 1, invoice.invoiceStateID, reg_info, null, null, null);
         return xml({ responseClaim: [{ status: 1 }, { message: reg_info }] });
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Доработка для записывания ифнормации в due
-    logger.debug("handleOpGu27 - вызов блока работы с due");
-    if ((invoice.stateTransaction === 4 || invoice.stateTransaction === 11 || invoice.stateTransaction === 24 || invoice.stateTransaction === 55) && invoice.invDue.length !== 0) {
-
-        //Формируем объект для передачи
-        payload = {
-            privateName: config.SYSTEM.privateCollection
-            //privateName: '_implicit_org_Org1MSP',
-            //privateName: 'CollTest1',
-            //privateName: 'CollTest2'
-        };
-        dues = new Array();
-        dues = await duesGen(invoice.invDue, invoice, dues);            // генерация массива invDue
-        dues = await duesGen(invoice.invDueArrive, invoice, dues);            // генерация массива invDueArrive
-        dues = await duesGen(invoice.invDueEnter, invoice, dues);            // генерация массива invDueEnter
-
-        duesList = {
-            dues: dues,
-        };
-        transient = {
-            dueList: duesList
-        };
-
-        let jsonObject = { transaction: invoice.dueTransaction, contractId: invoice.idSm, payload: payload, transient: transient, opts: invoice.opts };
-        logger.info("Sended to BlockChain: " + JSON.stringify(jsonObject));
-
-        //Вызываем REST-сервис записи в БЧ
-        res.set('Content-Type', 'text/xml');
-        try {
-            response = await axios.post(`http://${config.SYSTEM.restConfig.invoke.host}:${config.SYSTEM.restConfig.invoke.port}/${config.SYSTEM.restConfig.invoke.name}`, jsonObject);
-        } catch (e) {
-            reg_info = `handleOpInvoice. Ошибка при вызове сервиса: ${JSON.stringify(e)}`;
-            reg_init.regError(invoice.idSm, 27, invoice.checkSum, 0, 1, invoice.invoiceStateID, reg_info, null, null, e);
-            return xml({ responseClaim: [{ status: 1 }, { message: reg_info }] });
-        }
-        if (response.data.code !== 0) {
-            reg_info = `handleOpInvoice. response.data.code !== 0:${JSON.stringify(response.data)}`;
-            reg_init.regError(invoice.idSm, 27, invoice.checkSum, 2, 1, invoice.invoiceStateID, reg_info, null, null, null);
-            return xml({ responseClaim: [{ status: 1 }, { message: reg_info }] });
-        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
