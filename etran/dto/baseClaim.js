@@ -158,6 +158,25 @@ class BaseClaim extends BaseDocument {
                 }
             }
 
+            //otprRvContName
+            this.otprRvContName = new Array();
+            if (typeof xmlCfg.claim_doc_route.clmotpr === 'undefined') { this.otprRvContName[0] = ''; }
+            else {
+                if (Array.isArray(xmlCfg.claim_doc_route.clmotpr)) {
+                    for (let i = 0; i < xmlCfg.claim_doc_route.clmotpr.length; i++) {
+
+                        if (typeof xmlCfg.claim_doc_route.clmotpr[i].otprrvcontname === 'undefined') { this.otprRvContName[i] = ''; }
+                        else { this.otprRvContName[i] = xmlCfg.claim_doc_route.clmotpr[i].otprrvcontname.$.value; }
+                    }
+                }
+                else {
+                    let i = 0;
+
+                    if (typeof xmlCfg.claim_doc_route.clmotpr.otprrvcontname === 'undefined') { this.otprRvContName[i] = ''; }
+                    else { this.otprRvContName[i] = xmlCfg.claim_doc_route.clmotpr.otprrvcontname.$.value; }
+                }
+            }
+
             //otprToStationCode
             this.otprToStationCode = new Array();
             if (typeof xmlCfg.claim_doc_route.clmotpr === 'undefined') { this.otprToStationCode[0] = 0; }

@@ -31,12 +31,17 @@
             "askmpnpContracts": "rrd.askmpnp_contracts",
             "regMessage": "rrd.reg_message",
             "regSql": "rrd.reg_sql",
-            "dues": "rrd.dues"
+            "dues": "rrd.dues",
+            "history": "rrd.history",
+            "bundle_history": "rrd.bundleHistory"
         },
         "dbFunctions": {
-            "editTracking": "public.edit_tracking",
-            "violationReg": "public.violation_reg",
-            "removeTracking": "public.remove_tracking"
+            "editTracking": "rrd.edit_tracking",
+            "violationReg": "rrd.violation_reg",
+            "removeTracking": "rrd.remove_tracking",
+            "imesToQueue": "rrd.imes_to_queue",
+            "imesGetNext": "rrd.imes_get_next",
+            "imesEndPhase": "rrd.imes_end_phase"
         },
         "dbConnections": {
             "dbrzd": {
@@ -68,7 +73,7 @@
             }
         },
         "privateCollection": "_implicit_org_Org1MSP",
-        "loggerLevel": "info",
+        "loggerLevel": "debug",
         "kafkaConfig": {
             "producer": {
                 "active": false,

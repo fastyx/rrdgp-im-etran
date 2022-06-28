@@ -5,6 +5,7 @@ const { v4: getuuid } = require('uuid');
 var xmlParse = require('xml2json');
 const reg_init = require('../reg_init');
 var produceKafka = require("./producer");
+const config = require(`../init_config`);
 
 const logger = require('../config/logger');
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -128,7 +129,28 @@ exports.kafkaHandler = async function (req) {
     // registration
     reg_init.regMessage(idSm, docType, docBody, docCheckSum, 0, 1, docStateId, docNumber, docId);
 
-    // insert into Kafka
-    return produceKafka.push(idSm, req.rawBody);
+    // insert into Kafka or kafka_table
+    //return produceKafka.push(idSm, req.rawBody);
+    logger.debug("kafkaHandler: Вызов ХП записи в таблицу-очередь сообщения");
+    try {
+        var sql = `SELECT ${config.SYSTEM.dbFunctions.imesToQueue} ($1,$2,$3,$4,$5,$6,$7,$8,$9)`;
+        await client.query(sql,
+            [
+                docBody,
+                null,
+                docCheckSum,
+                null,
+                1,
+                "ETRAN",
+                0,
+                "Ок",
+                true
+            ]
+        );
+        return xml({ responseClaim: [{idSm: idSm}, { status: 0 }, { message: "Ок" }] });
+    } catch (e) {
+        reg_info = `kafkaHandler. ошибка при вызову фенкции SELECT ${config.SYSTEM.dbFunctions.imesToQueue}`;
+        reg_init.regError(idSm, docType, docCheckSum, 1, 1, docStateId, reg_info, sql, null, e);
+    }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

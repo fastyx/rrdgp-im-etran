@@ -42,6 +42,9 @@ class ClaimOp01 extends BaseClaim {
         if (typeof xmlCfg.claim_doc_route.clmstartdate === 'undefined') { this.clmStartDate = "0001-01-01 00:00:00.00000+00"; }
         else {
             this.clmStartDate = xmlCfg.claim_doc_route.clmstartdate.$.value;
+            this.a = this.clmStartDate.split(" ");
+            this.a[0] = this.a[0].split(".").reverse().join(".");
+            this.clmStartDate = this.a[0] + " " + this.a[1];
         }
         //console.log("this.clmStartDate = " + this.clmStartDate);
 

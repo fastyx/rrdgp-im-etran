@@ -29,7 +29,7 @@ exports.handleOpClaim = async function (req, res, client, config, xmlCfg, claim)
     logger.debug(`handleOpClaim. Вызов handleConditions`);
     var payload = await condGen(config, client, claim);
     //console.log(payload);
-    let jsonObject = { transaction: "handleConditions", contractId: claim.idSm, contractIdInvoice: null, payload: payload, opts: claim.opts };
+    let jsonObject = { transaction: "handleConditions", contractId: claim.idSm, contractIdInvoice: '00000000-0000-0000-0000-000000000000', payload: payload, opts: claim.opts };
     logger.info("Sending to BlockChain: " + JSON.stringify(jsonObject));              //console.log(jsonObject);
 
     try {
@@ -59,7 +59,7 @@ exports.handleOpClaim = async function (req, res, client, config, xmlCfg, claim)
     claimEndDate: claim.epochClaimEndDate,                            //handleOp2102
     clmStartDate: claim.epochClmStartDate                             //handleOp1     //handleOp2
   };
-  let jsonObject = { transaction: claim.transaction, contractId: claim.idSm, contractIdInvoice: null, payload: payload, opts: claim.opts };
+  let jsonObject = { transaction: claim.transaction, contractId: claim.idSm, contractIdInvoice: '00000000-0000-0000-0000-000000000000', payload: payload, opts: claim.opts };
   logger.info("Sending to BlockChain: " + JSON.stringify(jsonObject));              //console.log(jsonObject);
 
   //Вызываем REST-сервис записи в БЧ
