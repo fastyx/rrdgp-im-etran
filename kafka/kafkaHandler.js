@@ -6,6 +6,7 @@ var xmlParse = require('xml2json');
 const reg_init = require('../reg_init');
 var produceKafka = require("./producer");
 const config = require(`../init_config`);
+var replaceall = require("replaceall");
 
 const logger = require('../config/logger');
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -18,6 +19,9 @@ exports.kafkaHandler = async function (req) {
     let docNumber = null;
     let docId = null;
 
+    let sm = '';
+    let reg_info = 'Ok';
+
     // Передача claim (GU-12)
     if (typeof req.body.requestclaim !== 'undefined') {
         try {
@@ -29,11 +33,38 @@ exports.kafkaHandler = async function (req) {
             docNumber = req.body.requestclaim.claim.claimnumber.$.value;
             docId = req.body.requestclaim.claim.claimid.$.value;
             operDate = req.body.requestclaim.claim.operdate.$.value;
+
+            try {
+                result = await client.query(`select id_sm from ${config.SYSTEM.dbTables.etranClaim} where claim_number=($1)`, [docNumber]);
+            } catch (e) {
+                reg_info = `Claim: ошибка при чтении таблицы ${config.SYSTEM.dbTables.etranClaim} по claim_number=${docNumber}`;
+                reg_init.regError(null, docType, docCheckSum, 1, 1, docStateId, reg_info, null, null, e);
+            }
+
             if (docStateId == 70) {
-                idSm = getuuid();
+                if (result.rowCount === 0 && idSm === '') {
+                    idSm = getuuid();
+                    req.rawBody = replaceall(`<idSm></idSm>`, `<idSm>${idSm}</idSm>`, req.rawBody);
+                }
+                else if (result.rowCount !== 0 && idSm === '') {
+                    idSm = result.rows[0].id_sm;
+                    req.rawBody = replaceall(`<idSm></idSm>`, `<idSm>${idSm}</idSm>`, req.rawBody);
+                }
+                else if (result.rowCount !== 0 && idSm !== '') {
+                    if (idSm !== result.rows[0].id_sm) {
+                        reg_info = `Claim: по claim_number=${docNumber} idSm=${idSm} != id_sm=${result.rows[0].id_sm}`;
+                        reg_init.regError(idSm, docType, docCheckSum, 1, 1, docStateId, reg_info, null, null, null);
+                    }
+                }
+                else if (result.rowCount === 0 && idSm !== '') {
+                    reg_info = `Claim: по claim_number=${docNumber} в БД не обнаружен id_sm=${idSm}`;
+                    reg_init.regError(idSm, docType, docCheckSum, 1, 1, docStateId, reg_info, null, null, null);
+                }
+                sm = idSm;
             }
         } catch (e) {
-            return xml({ responseClaim: [{ status: 1 }, { message: `Ошибка форматного контроля входных параметров ${e}` }] });
+            reg_info = `Ошибка форматного контроля входных параметров ${e}`;
+            reg_init.regError(idSm, docType, docCheckSum, 1, 1, docStateId, reg_info, null, null, null);
         }
     }
 
@@ -49,7 +80,8 @@ exports.kafkaHandler = async function (req) {
             docId = req.body.requestinvoice.invoice.invoiceid.$.value;
             operDate = req.body.requestinvoice.invoice.operdate.$.value;
         } catch (e) {
-            return xml({ responseClaim: [{ status: 1 }, { message: `Ошибка форматного контроля входных параметров ${e}` }] });
+            reg_info = `Ошибка форматного контроля входных параметров ${e}`;
+            reg_init.regError(idSm, docType, docCheckSum, 1, 1, docStateId, reg_info, null, null, null);
         }
     }
 
@@ -65,7 +97,8 @@ exports.kafkaHandler = async function (req) {
             docId = req.body.requestnotification.vpu.vpuid.$.value;
             operDate = req.body.requestnotification.vpu.operdate.$.value;
         } catch (e) {
-            return xml({ responseClaim: [{ status: 1 }, { message: `Ошибка форматного контроля входных параметров ${e}` }] });
+            reg_info = `Ошибка форматного контроля входных параметров ${e}`;
+            reg_init.regError(idSm, docType, docCheckSum, 1, 1, docStateId, reg_info, null, null, null);
         }
     }
 
@@ -81,7 +114,8 @@ exports.kafkaHandler = async function (req) {
             docId = req.body.requestnotification.cum.cumid.$.value;
             operDate = req.body.requestnotification.cum.operdate.$.value;
         } catch (e) {
-            return xml({ responseClaim: [{ status: 1 }, { message: `Ошибка форматного контроля входных параметров ${e}` }] });
+            reg_info = `Ошибка форматного контроля входных параметров ${e}`;
+            reg_init.regError(idSm, docType, docCheckSum, 1, 1, docStateId, reg_info, null, null, null);
         }
     }
 
@@ -97,7 +131,8 @@ exports.kafkaHandler = async function (req) {
             docId = req.body.requestnotification.notificationgu2b.cargoendnotificationid.$.value;
             operDate = req.body.requestnotification.notificationgu2b.crgdatecreate.$.value;
         } catch (e) {
-            return xml({ responseClaim: [{ status: 1 }, { message: `Ошибка форматного контроля входных параметров ${e}` }] });
+            reg_info = `Ошибка форматного контроля входных параметров ${e}`;
+            reg_init.regError(idSm, docType, docCheckSum, 1, 1, docStateId, reg_info, null, null, null);
         }
     }
 
@@ -117,13 +152,9 @@ exports.kafkaHandler = async function (req) {
             docId = req.body.requestnotification.pps.request.documentdata.docid;
             operDate = req.body.requestnotification.pps.operdate;
         } catch (e) {
-            return xml({ responseClaim: [{ status: 1 }, { message: `Ошибка форматного контроля входных параметров ${e}` }] });
+            reg_info = `Ошибка форматного контроля входных параметров ${e}`;
+            reg_init.regError(idSm, docType, docCheckSum, 1, 1, docStateId, reg_info, null, null, null);
         }
-    }
-
-    // Передано что-то другое
-    else {
-        return xml({ responseClaim: [{ status: 1 }, { message: "Info: тип входных данных не определен" }] });
     }
 
     // registration
@@ -137,19 +168,19 @@ exports.kafkaHandler = async function (req) {
         await client.query(sql,
             [
                 docBody,
-                null,
+                req.rawBody,
                 docCheckSum,
                 null,
                 1,
                 "ETRAN",
                 0,
-                "Ок",
+                reg_info,
                 true
             ]
         );
-        return xml({ responseClaim: [{idSm: idSm}, { status: 0 }, { message: "Ок" }] });
+        return xml({ responseClaim: [{ idSm: sm }, { status: 0 }, { message: "Ок" }] });
     } catch (e) {
-        reg_info = `kafkaHandler. ошибка при вызову фенкции SELECT ${config.SYSTEM.dbFunctions.imesToQueue}`;
+        reg_info = `kafkaHandler. ошибка при вызову функции SELECT ${config.SYSTEM.dbFunctions.imesToQueue}`;
         reg_init.regError(idSm, docType, docCheckSum, 1, 1, docStateId, reg_info, sql, null, e);
     }
 }
