@@ -138,7 +138,7 @@ exports.handleOpInvoice = async function (req, res, client, config, xmlCfg, invo
         invDateEnd: invoice.epochInvDateEnd,                                        //handleOp2155
         cars: invoice.car
     };
-    let jsonObject = { transaction: invoice.transaction, contractId: invoice.idSm, contractIdInvoice: invoice.idSmInvoice, payload: payload, opts: invoice.opts };
+    let jsonObject = { channel: config.SYSTEM.defaultChannel, transaction: invoice.transaction, contractId: invoice.idSm, contractIdInvoice: invoice.idSmInvoice, payload: payload, opts: invoice.opts };
 
     logger.info(`handleOpInvoice: Sended to BlockChain: ${JSON.stringify(jsonObject)}`);
 

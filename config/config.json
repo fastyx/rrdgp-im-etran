@@ -1,6 +1,12 @@
 {
     "MAIN": {
-        "version": "1.0.103"
+        "version": "1.0.103",
+        "system": 1
+    },
+    "defaultChannel": "",
+    "stages": {
+        "database": 100,
+        "blockchain": 200
     },
     "SYSTEM": {
         "dbTables": {
@@ -33,7 +39,7 @@
             "regSql": "rrd.reg_sql",
             "dues": "rrd.dues",
             "history": "rrd.history",
-            "bundle_history": "rrd.bundleHistory"
+            "bundleHistory": "rrd.bundle_history"
         },
         "dbFunctions": {
             "editTracking": "rrd.edit_tracking",
@@ -53,7 +59,7 @@
             }
         },
         "dbConfig": {
-            "max": 2,
+            "max": 3,
             "idleTimeoutMillis": 30000,
             "connectionTimeoutMillis": 2000
         },
@@ -73,7 +79,7 @@
             }
         },
         "privateCollection": "_implicit_org_Org1MSP",
-        "loggerLevel": "debug",
+        "loggerLevel": "info",
         "kafkaConfig": {
             "producer": {
                 "active": false,

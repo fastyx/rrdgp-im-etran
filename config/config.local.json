@@ -2,6 +2,7 @@
     "MAIN": {
         "version": "1.0.103"
     },
+    "defaultChannel": "",
     "SYSTEM": {
         "dbTables": {
             "bundleClaim": "rrd.bundle_claim",
@@ -33,7 +34,7 @@
             "regSql": "rrd.reg_sql",
             "dues": "rrd.dues",
             "history": "rrd.history",
-            "bundle_history": "rrd.bundleHistory"
+            "bundleHistory": "rrd.bundle_history"
         },
         "dbFunctions": {
             "editTracking": "rrd.edit_tracking",

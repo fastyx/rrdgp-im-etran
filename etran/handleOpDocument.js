@@ -52,7 +52,7 @@ exports.handleOpDocument = async function (req, res, client, config, xmlCfg, idS
             cars: resCarArray                                                                   //Работаем с тем массивом вагонов, которые получены после удаления тех, что не на слежении
         };
     }
-    let jsonObject = { transaction: guDoc.transaction, contractId: idSm, contractIdInvoice: '00000000-0000-0000-0000-000000000000', payload: payload, opts: guDoc.opts };
+    let jsonObject = { channel: config.SYSTEM.defaultChannel, transaction: guDoc.transaction, contractId: idSm, contractIdInvoice: '00000000-0000-0000-0000-000000000000', payload: payload, opts: guDoc.opts };
     logger.info("Sended to BlockChain: " + JSON.stringify(jsonObject));
 
     //Вызываем REST-сервис записи в БЧ

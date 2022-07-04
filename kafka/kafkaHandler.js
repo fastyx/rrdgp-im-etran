@@ -170,7 +170,7 @@ exports.kafkaHandler = async function (req) {
                 docBody,
                 req.rawBody,
                 docCheckSum,
-                null,
+                checksum(req.rawBody),
                 1,
                 "ETRAN",
                 0,

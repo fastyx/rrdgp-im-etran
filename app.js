@@ -26,6 +26,7 @@ app.listen(config.SYSTEM.restConfig.etranService.port, () => {
     require("./routes/post_routes/processKafka.js")(app);
     require("./kafka/consumer.js")(app);
     require(`./kafka_init`);
-    require(`./kafka/table_producer.js`);
+    require(`./kafka/tableConsumerDB.js`);
+    require(`./kafka/tableConsumerBC.js`);
 });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

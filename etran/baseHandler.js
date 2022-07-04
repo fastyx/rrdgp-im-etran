@@ -34,7 +34,7 @@ exports.baseHandler = async function (req, res, client, config) {
     // Передача claim (GU-12)
     if (!(xmlCfg.claim_root_route === null)) {
 
-        logger.info(`Claim: старт обработки запроса ГУ-12`);
+        logger.debug(`Claim: старт обработки запроса ГУ-12`);
 
         // Регистрация Начала
         claimBase = new BaseClaim(req, xmlCfg);
@@ -52,7 +52,7 @@ exports.baseHandler = async function (req, res, client, config) {
     // Передача invoice (ГУ-27)
     else if (!(xmlCfg.invoice_root_route === null)) {
 
-        logger.info(`Invoice: старт обработки запроса ГУ-27`);
+        logger.debug(`Invoice: старт обработки запроса ГУ-27`);
 
         // Регистрация начала
         invoiceBase = new BaseInvoice(req, xmlCfg, res);
@@ -70,7 +70,7 @@ exports.baseHandler = async function (req, res, client, config) {
     //Передача ГУ-46
     else if (!(xmlCfg.gu_46_doc_route === null)) {
 
-        logger.info(`Document: старт обработки документа ГУ-46`);
+        logger.debug(`Document: старт обработки документа ГУ-46`);
 
         // Регистрация начала
         gu46 = new BaseGu46(req, xmlCfg, res);
@@ -88,7 +88,7 @@ exports.baseHandler = async function (req, res, client, config) {
     //Передача ФДУ-92
     else if (!(xmlCfg.fdu_92_doc_route === null)) {
 
-        logger.info(`Document: старт обработки документа ФДУ-92`);
+        logger.debug(`Document: старт обработки документа ФДУ-92`);
 
         // Регистрация Начала
         fdu92 = new BaseFdu92(req, xmlCfg, res);
@@ -106,7 +106,7 @@ exports.baseHandler = async function (req, res, client, config) {
     // Передача ГУ-2б
     else if (!(xmlCfg.gu_2b_doc_route === null)) {
 
-        logger.info(`Document: старт обработки документа ГУ-2Б`);
+        logger.debug(`Document: старт обработки документа ГУ-2Б`);
 
         // Регистрация начала
         gu2b = new BaseGu2b(req, xmlCfg, res);   //Парсим данные по ГУ-2Б
@@ -124,7 +124,7 @@ exports.baseHandler = async function (req, res, client, config) {
     //Передача ГУ-45
     else if (!(xmlCfg.gu_45_doc_route === null)) {
 
-        logger.info(`Document: старт обработки документа ГУ-45`);
+        logger.debug(`Document: старт обработки документа ГУ-45`);
 
         // Регистрация начала
         gu45 = new BaseGu45(req, xmlCfg, res);
