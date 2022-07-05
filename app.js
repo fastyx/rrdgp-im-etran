@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const express = require('express');
-const xmlparser = require('express-xml-bodyparser');        
-const xml = require('xml');                                 
+const xmlparser = require('express-xml-bodyparser');
+const xml = require('xml');
 const logger = require('./config/logger');
 const config = require('./init_config');
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,12 +21,11 @@ app.listen(config.SYSTEM.restConfig.etranService.port, () => {
 
     let httpRequestDurationMicroseconds = null;
     require("./routes/get_routes/prom.js")(app, httpRequestDurationMicroseconds);
-    require("./routes/post_routes/process.js")(app, httpRequestDurationMicroseconds);
+    require("./routes/post_routes/processConsumer.js")(app, httpRequestDurationMicroseconds);
+    require("./routes/post_routes/processProducer.js")(app);
     require("./routes/get_routes/isrun.js")(app);
-    require("./routes/post_routes/processKafka.js")(app);
-    require("./kafka/consumer.js")(app);
-    require(`./kafka_init`);
-    require(`./kafka/tableConsumerDB.js`);
-    require(`./kafka/tableConsumerBC.js`);
+    require(`./kafka/tableConsumerDatabase.js`);
+    require(`./kafka/tableConsumerBlockchain.js`);
+    require(`./kafka/tableConsumerViolation.js`);
 });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

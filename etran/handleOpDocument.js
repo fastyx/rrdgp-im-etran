@@ -14,14 +14,23 @@ const sqlDoc = require('./crud/sqlDocumentOp.js');
 
 exports.handleOpDocument = async function (req, res, client, config, xmlCfg, idSm, resCarArray, guDoc, cumDue) {
 
+    let transactions = new Array();
+
     logger.debug("handleOpGuDoc - called");
 
-    var response;
+    let response;
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Запись информации в БД 
     // Регистрация
-    reg_init.regMessage(idSm, guDoc.docTypeId, null, guDoc.checkSum, 1, 1, guDoc.stateTransaction, guDoc.docNumber, guDoc.docId);
+    reg_init.regMessage(idSm, guDoc.docTypeId, null, guDoc.checkSum, 2, 1, guDoc.stateTransaction, guDoc.docNumber, guDoc.docId);
+    // Запись в Postgres 
+    await sqlDoc.sqlDocumentOp(guDoc, client, config, idSm, response, resCarArray, cumDue);
+    // Регистрация
+    reg_init.regMessage(idSm, guDoc.docTypeId, null, guDoc.checkSum, 3, 1, guDoc.stateTransaction, guDoc.docNumber, guDoc.docId);
 
-
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Подготовка информации в БЧ
     //Формируем объект для передачи
     if (guDoc.stateTransaction === 177 || guDoc.stateTransaction === 178) {
         payload = {
@@ -53,29 +62,7 @@ exports.handleOpDocument = async function (req, res, client, config, xmlCfg, idS
         };
     }
     let jsonObject = { channel: config.SYSTEM.defaultChannel, transaction: guDoc.transaction, contractId: idSm, contractIdInvoice: '00000000-0000-0000-0000-000000000000', payload: payload, opts: guDoc.opts };
-    logger.info("Sended to BlockChain: " + JSON.stringify(jsonObject));
+    transactions.push(jsonObject);
 
-    //Вызываем REST-сервис записи в БЧ
-    res.set('Content-Type', 'text/xml');
-    try {
-        response = await axios.post(`http://${config.SYSTEM.restConfig.invoke.host}:${config.SYSTEM.restConfig.invoke.port}/${config.SYSTEM.restConfig.invoke.name}`, jsonObject)
-    } catch (e) {
-        reg_info = `Document. ProcessDocument4692: ошибка при вызове сервиса ${JSON.stringify(e)}`;
-        reg_init.regError(idSm, guDoc.docTypeId, guDoc.checkSum, 0, 1, guDoc.stateTransaction, reg_info, jsonObject, null, e);
-        return xml({ responseClaim: [{ status: 1 }, { message: reg_info }] });
-    }
-    if (response.data.code === 0) {
-
-        // Регистрация
-        reg_init.regMessage(idSm, guDoc.docTypeId, null, guDoc.checkSum, 2, 1, guDoc.stateTransaction, guDoc.docNumber, guDoc.docId);
-
-        // Запись в Postgres 
-        await sqlDoc.sqlDocumentOp(guDoc, client, config, idSm, response, resCarArray, cumDue);
-    }
-    else {
-        reg_info = `Document. ProcessDocument4692: response.data.code !== 0:${JSON.stringify(response.data)}`;
-        reg_init.regError(idSm, guDoc.docTypeId, guDoc.checkSum, 2, 1, guDoc.stateTransaction, reg_info, jsonObject, null, null);
-        return xml({ responseClaim: [{ status: 1 }, { message: reg_info }] });
-    }
-    return xml({ responseClaim: [{ status: 0 }, { message: "Ок" }] });
+    return { status: 0, transactions: transactions };
 }

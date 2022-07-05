@@ -6,7 +6,8 @@
     "defaultChannel": "",
     "stages": {
         "database": 100,
-        "blockchain": 200
+        "blockchain": 200,
+        "violation": 300
     },
     "SYSTEM": {
         "dbTables": {

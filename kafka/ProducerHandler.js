@@ -4,13 +4,12 @@ const checksum = require('json-checksum');
 const { v4: getuuid } = require('uuid');
 var xmlParse = require('xml2json');
 const reg_init = require('../reg_init');
-var produceKafka = require("./producer");
 const config = require(`../init_config`);
 var replaceall = require("replaceall");
 
 const logger = require('../config/logger');
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-exports.kafkaHandler = async function (req) {
+exports.producerHandler = async function (req) {
 
     let idSm = null;
     let docType = null;
@@ -163,12 +162,13 @@ exports.kafkaHandler = async function (req) {
     // insert into Kafka or kafka_table
     //return produceKafka.push(idSm, req.rawBody);
     logger.debug("kafkaHandler: Вызов ХП записи в таблицу-очередь сообщения");
+
     try {
         var sql = `SELECT ${config.SYSTEM.dbFunctions.imesToQueue} ($1,$2,$3,$4,$5,$6,$7,$8,$9)`;
         await client.query(sql,
             [
-                docBody,
                 req.rawBody,
+                { "data": { "message": req.body, idSm: idSm, "transactions": [], "violations": [] } },
                 docCheckSum,
                 checksum(req.rawBody),
                 1,

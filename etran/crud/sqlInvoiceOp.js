@@ -421,6 +421,7 @@ exports.sqlInvoiceOp = async function (invoice, client, config, response) {
                 }
             }
 
+            /*
             // запись в violation_reg
             list = { condCheckList: response.data.data.condCheckList };
             list = JSON.stringify(list);
@@ -436,6 +437,7 @@ exports.sqlInvoiceOp = async function (invoice, client, config, response) {
                 reg_info = `Invoice. sqlInvoiceOp: ошибка при вызове функции ${config.SYSTEM.dbFunctions.violationReg} idSm=${response.data.data.sm.idSm}. condCheckList=${list}`;
                 reg_init.regError(invoice.idSm, 27, invoice.checkSum, 1, 1, invoice.invoiceStateID, reg_info, sql, null, e);
             }
+            */
 
 
             //Запись в role_org 

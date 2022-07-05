@@ -12,45 +12,38 @@ const axios = require('axios').create(axiosDefaultConfig);
 
 const insClaimOp = require('./crud/sqlClaimOp.js');
 
-var transactions = new Array();
 
 exports.handleOpClaim = async function (req, res, client, config, xmlCfg, claim) {
 
+  let transactions = new Array();
+
   logger.debug("handleOpClaim_called");
 
-  var response;
+  let response;
 
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Запись информации в БД 
   // Регистрация
-  reg_init.regMessage(claim.idSm, 12, null, claim.checkSum, 1, 1, claim.claimStateID, claim.claimNumber, claim.claimId);
+  reg_init.regMessage(claim.idSm, 12, null, claim.checkSum, 2, 1, claim.claimStateID, claim.claimNumber, claim.claimId);
+  // Запись в Postgres 
+  await insClaimOp.sqlClaimOp(claim, client, config, response);
+  // Регистрация
+  reg_init.regMessage(claim.idSm, 12, null, claim.checkSum, 3, 1, claim.claimStateID, claim.claimNumber, claim.claimId);
 
-  // Передача нормативов в БЧ (а только после этого запись транзакции в БЧ)
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Подготовка информации в БЧ
+  // handleConditions
   if (claim.transaction === 'handleOp2') {
-    logger.debug(`handleOpClaim. handleOp2 called`);
-
-    //Формируем объект для передачи
     logger.debug(`handleOpClaim. Вызов handleConditions`);
-    var payload = await condGen(config, client, claim);
-    //console.log(payload);
-    let jsonObject = { channel: config.SYSTEM.defaultChannel, transaction: "handleConditions", contractId: claim.idSm, contractIdInvoice: '00000000-0000-0000-0000-000000000000', payload: payload, opts: claim.opts };
-    transactions.push(jsonObject);
-    logger.info("Sending to BlockChain: " + JSON.stringify(jsonObject));              //console.log(jsonObject);
 
-    try {
-      response = await axios.post(`http://${config.SYSTEM.restConfig.invoke.host}:${config.SYSTEM.restConfig.invoke.port}/${config.SYSTEM.restConfig.invoke.name}`, jsonObject)
-    } catch (e) {
-      reg_info = `handleOpclaim. Ошибка при вызове транзакции handleConditions: ${JSON.stringify(e)}`;
-      reg_init.regError(claim.idSm, 12, claim.checkSum, 0, 1, claim.claimStateID, reg_info, jsonObject, null, e);
-      return xml({ responseClaim: [{ status: 1 }, { message: reg_info }] });      // +++ tests (send <claim_71> ОhandleOpclaim. handleOpclaim. Ошибка при вызове транзакции handleConditions) +++
-    }
-    logger.debug(`handleOpClaim. handleConditions called`);
-    if (response.data.code !== 0) {
-      reg_info = `handleOpclaim: response.data.code !== 0: ${JSON.stringify(response.data)}`;
-      reg_init.regError(claim.idSm, 12, claim.checkSum, 2, 1, claim.claimStateID, reg_info, jsonObject, null, null);
-      return xml({ responseClaim: [{ status: 1 }, { message: reg_info }] });    // +++ tests (send <claim_71> handleOpclaim: response.data.code !== 0 (handleCondition)) +++
-    }
+    var payload = await condGen(config, client, claim);
+
+    let jsonObject = { channel: config.SYSTEM.defaultChannel, transaction: "handleConditions", contractId: claim.idSm, contractIdInvoice: '00000000-0000-0000-0000-000000000000', payload: payload, opts: claim.opts };
+
+    transactions.push(jsonObject);
   }
 
-  //Формируем объект для передачи
+  // Транзакция claim
   payload = {
     checkSum: claim.checkSum,
     claimId: claim.claimId,
@@ -64,43 +57,8 @@ exports.handleOpClaim = async function (req, res, client, config, xmlCfg, claim)
   };
   let jsonObject = { channel: config.SYSTEM.defaultChannel, transaction: claim.transaction, contractId: claim.idSm, contractIdInvoice: '00000000-0000-0000-0000-000000000000', payload: payload, opts: claim.opts };
   transactions.push(jsonObject);
-  logger.info("Sending to BlockChain: " + JSON.stringify(jsonObject));              //console.log(jsonObject);
 
-  // Регистрация
-  reg_init.regMessage(claim.idSm, 12, null, claim.checkSum, 2, 1, claim.claimStateID, claim.claimNumber, claim.claimId);
-
-  // Запись в Postgres 
-  await insClaimOp.sqlClaimOp(claim, client, config, response);
-
-  /*
-  //Вызываем REST-сервис записи в БЧ
-  res.set('Content-Type', 'text/xml');
-  try {
-    response = await axios.post(`http://${config.SYSTEM.restConfig.invoke.host}:${config.SYSTEM.restConfig.invoke.port}/${config.SYSTEM.restConfig.invoke.name}`, jsonObject)
-  } catch (e) {
-    reg_info = `handleOpclaim. Ошибка при вызове сервиса: ${JSON.stringify(e)}`;
-    reg_init.regError(claim.idSm, 12, claim.checkSum, 0, 1, claim.claimStateID, reg_info, jsonObject, null, e);
-    return xml({ responseClaim: [{ status: 1 }, { message: reg_info }] });      // +++ tests (send <claim_70> handleOpclaim. Ошибка при вызове сервиса) +++
-  }
-  logger.debug(`handleOpClaim. transaction called`);
-  if (response.data.code === 0) {
-
-    // Регистрация
-    reg_init.regMessage(claim.idSm, 12, null, claim.checkSum, 2, 1, claim.claimStateID, claim.claimNumber, claim.claimId);
-
-    // Запись в Postgres 
-    await insClaimOp.sqlClaimOp(claim, client, config, response);
-  }
-  else {
-    reg_info = `handleOpclaim: response.data.code !== 0: ${JSON.stringify(response.data)}`;
-    reg_init.regError(claim.idSm, 12, claim.checkSum, 2, 1, claim.claimStateID, reg_info, jsonObject, null, null);
-    return xml({ responseClaim: [{ status: 1 }, { message: reg_info }] });    // +++ tests (send <claim_162> handleOpclaim: response.data.code !== 0 (handleOp)) +++
-  }
-
-  */
-
-  console.log(transactions)
-  return xml({ responseClaim: [{ status: 0 }, { transactions: JSON.stringify(transactions) }] });
+  return { status: 0, transactions: transactions };
 };
 
 

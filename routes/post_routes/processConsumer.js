@@ -2,11 +2,12 @@
 const logger = require('../../config/logger')
 const config = require('../../init_config');
 const pool = require('../../init_db_pool');
-const bh = require('../../etran/baseHandler');
+const bh = require('../../etran/ConsumerHandler');
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var appRouter = async function (app) {
     app.post(`/${config.SYSTEM.restConfig.etranService.name}`, async function (req, res) {
+        
         const end = httpRequestDurationMicroseconds.startTimer();
         const route = req.route.path;
 
@@ -16,7 +17,7 @@ var appRouter = async function (app) {
 
             client = await pool.connect();
             try {
-                eventResult = await bh.baseHandler(req, res, client, config);
+                eventResult = await bh.consumerHandler(req, res, client, config);
             } finally {
                 await client.release();
             }

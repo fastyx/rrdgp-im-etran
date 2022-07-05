@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const logger = require('../../config/logger')
 const config = require('../../init_config');
-const bh = require('../../kafka/kafkaHandler');
+const bh = require('../../kafka/ProducerHandler');
 const pool = require('../../init_db_pool');
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var appRouter = async function (app) {
@@ -12,7 +12,7 @@ var appRouter = async function (app) {
 
             client = await pool.connect();
             try {
-                eventResult = await bh.kafkaHandler(req);
+                eventResult = await bh.producerHandler(req);
             } finally {
                 await client.release();
             }

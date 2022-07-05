@@ -251,7 +251,7 @@ exports.sqlClaimOp = async function (claim, client, config, response) {
                             claim.otprFreightGngName[i],
                             claim.otprFreightWeight[i],
                             claim.otprCarTypeName[i],
-                            '',
+                            claim.otprRvContName[i],
                             claim.otprCarOwnerName[i],
                             claim.otprDaysDelivery[i],
                             claim.otprRecipId[i]
@@ -292,6 +292,8 @@ exports.sqlClaimOp = async function (claim, client, config, response) {
                         ]);
                     }
                 } catch (e) {
+                    console.log("kjdkfhj")
+                    console.log(e)
                     reg_info = `Claim. sqlClaimOp: ошибка при INSERT в ${config.SYSTEM.dbTables.etranClaimPayer}  idSm=${claim.idSm}`;
                     reg_init.regError(claim.idSm, 12, claim.checkSum, 1, 1, claim.claimStateID, reg_info, sql, null, e);
                 }
@@ -300,6 +302,7 @@ exports.sqlClaimOp = async function (claim, client, config, response) {
                 reg_init.regError(claim.idSm, 12, claim.checkSum, 1, 1, claim.claimStateID, reg_info, sql_del, null, e);
             }
 
+            /*
             // запись в violation_reg
             list = { condCheckList: response.data.data.condCheckList };
             list = JSON.stringify(list);
@@ -315,6 +318,7 @@ exports.sqlClaimOp = async function (claim, client, config, response) {
                 reg_info = `Claim. sqlClaimOp: ошибка при вызове функции ${config.SYSTEM.dbFunctions.violationReg} idSm=${response.data.data.sm.idSm}. condCheckList=${list}`;
                 reg_init.regError(claim.idSm, 12, claim.checkSum, 1, 1, claim.claimStateID, reg_info, sql_func, null, e);
             }
+            */
 
             //Запись в role_org 
             if (claim.transaction === 'handleOp1') {
@@ -330,6 +334,7 @@ exports.sqlClaimOp = async function (claim, client, config, response) {
             }
         }
     } catch (e) {
+        console.log(e)
         reg_info = `Claim. sqlClaimOp: ошибка при select ${config.SYSTEM.dbTables.history} `;
         reg_init.regError(claim.idSm, 12, claim.checkSum, 1, 1, claim.claimStateID, reg_info, sql, null, e);
     }
