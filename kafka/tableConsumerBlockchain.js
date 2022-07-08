@@ -13,10 +13,13 @@ logger.info(`Старт tableConsumerBlockchain`);
 
 cron.schedule('* * * * * *', async () => {
 
+    var curPhase = config.stages.blockchain;
+    var nextPhase = config.stages.violation;
+
     try {
         client = await pool.connect();
         var sql = `SELECT * from ${config.SYSTEM.dbFunctions.imesGetNext} ($1,$2)`;
-        result = await client.query(sql, [config.MAIN.system, config.stages.blockchain]);
+        result = await client.query(sql, [config.MAIN.system, curPhase]);
         await client.release();
 
         if (result.rowCount !== 0) {
@@ -35,16 +38,15 @@ cron.schedule('* * * * * *', async () => {
 
                     if (success) {
                         jsonObject = JSON.parse(row.imes_body_ext);
-                        for (violation of response.data.data.condCheckList) {
-                            jsonObject.data.violations.push(violation)
-                        }
+                        jsonObject.data.violations = response.data.data.condCheckList;
 
                         try {
                             client = await pool.connect();
                             var sql_imesEndPhase = `SELECT * from ${config.SYSTEM.dbFunctions.imesEndPhase} ($1,$2,$3,$4,$5,$6,$7,$8)`;
-                            result_imesEndPhase = await client.query(sql_imesEndPhase, [row.imes_id, 300, 0, "ok", true, false, jsonObject, 20]);
+                            result_imesEndPhase = await client.query(sql_imesEndPhase, [row.imes_id, nextPhase, 0, "ok", true, false, jsonObject, 20]);
                             await client.release();
                         } catch (e) {
+                            console.log(e)
                             await client.release();
                             reg_info = `Ошибка при обновлении информации в очереди процедурой ${config.SYSTEM.dbFunctions.imesEndPhase}`;
                             reg_init.regError(null, null, null, 2, 1, null, reg_info, sql_imesEndPhase, null, e);
@@ -57,6 +59,7 @@ cron.schedule('* * * * * *', async () => {
         }
     }
     catch (e) {
+        console.log(e)
         await client.release();
         reg_info = `Ошибка при считывании информации из очереди процедурой ${config.SYSTEM.dbFunctions.imesGetNext}. Фаза 2`;
         reg_init.regError(null, null, null, 2, 1, null, reg_info, null, null, e);

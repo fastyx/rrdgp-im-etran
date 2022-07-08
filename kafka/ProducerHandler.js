@@ -36,6 +36,7 @@ exports.producerHandler = async function (req) {
             try {
                 result = await client.query(`select id_sm from ${config.SYSTEM.dbTables.etranClaim} where claim_number=($1)`, [docNumber]);
             } catch (e) {
+                console.log(e)
                 reg_info = `Claim: ошибка при чтении таблицы ${config.SYSTEM.dbTables.etranClaim} по claim_number=${docNumber}`;
                 reg_init.regError(null, docType, docCheckSum, 1, 1, docStateId, reg_info, null, null, e);
             }
@@ -60,8 +61,10 @@ exports.producerHandler = async function (req) {
                     reg_init.regError(idSm, docType, docCheckSum, 1, 1, docStateId, reg_info, null, null, null);
                 }
                 sm = idSm;
+                req.body.requestclaim.idsm = idSm;
             }
         } catch (e) {
+            console.log(e)
             reg_info = `Ошибка форматного контроля входных параметров ${e}`;
             reg_init.regError(idSm, docType, docCheckSum, 1, 1, docStateId, reg_info, null, null, null);
         }
@@ -79,6 +82,7 @@ exports.producerHandler = async function (req) {
             docId = req.body.requestinvoice.invoice.invoiceid.$.value;
             operDate = req.body.requestinvoice.invoice.operdate.$.value;
         } catch (e) {
+            console.log(e)
             reg_info = `Ошибка форматного контроля входных параметров ${e}`;
             reg_init.regError(idSm, docType, docCheckSum, 1, 1, docStateId, reg_info, null, null, null);
         }
@@ -96,6 +100,7 @@ exports.producerHandler = async function (req) {
             docId = req.body.requestnotification.vpu.vpuid.$.value;
             operDate = req.body.requestnotification.vpu.operdate.$.value;
         } catch (e) {
+            console.log(e)
             reg_info = `Ошибка форматного контроля входных параметров ${e}`;
             reg_init.regError(idSm, docType, docCheckSum, 1, 1, docStateId, reg_info, null, null, null);
         }
@@ -113,6 +118,7 @@ exports.producerHandler = async function (req) {
             docId = req.body.requestnotification.cum.cumid.$.value;
             operDate = req.body.requestnotification.cum.operdate.$.value;
         } catch (e) {
+            console.log(e)
             reg_info = `Ошибка форматного контроля входных параметров ${e}`;
             reg_init.regError(idSm, docType, docCheckSum, 1, 1, docStateId, reg_info, null, null, null);
         }
@@ -130,6 +136,7 @@ exports.producerHandler = async function (req) {
             docId = req.body.requestnotification.notificationgu2b.cargoendnotificationid.$.value;
             operDate = req.body.requestnotification.notificationgu2b.crgdatecreate.$.value;
         } catch (e) {
+            console.log(e)
             reg_info = `Ошибка форматного контроля входных параметров ${e}`;
             reg_init.regError(idSm, docType, docCheckSum, 1, 1, docStateId, reg_info, null, null, null);
         }
@@ -151,6 +158,7 @@ exports.producerHandler = async function (req) {
             docId = req.body.requestnotification.pps.request.documentdata.docid;
             operDate = req.body.requestnotification.pps.operdate;
         } catch (e) {
+            console.log(e)
             reg_info = `Ошибка форматного контроля входных параметров ${e}`;
             reg_init.regError(idSm, docType, docCheckSum, 1, 1, docStateId, reg_info, null, null, null);
         }
@@ -162,13 +170,13 @@ exports.producerHandler = async function (req) {
     // insert into Kafka or kafka_table
     //return produceKafka.push(idSm, req.rawBody);
     logger.debug("kafkaHandler: Вызов ХП записи в таблицу-очередь сообщения");
-
+    
     try {
         var sql = `SELECT ${config.SYSTEM.dbFunctions.imesToQueue} ($1,$2,$3,$4,$5,$6,$7,$8,$9)`;
         await client.query(sql,
             [
                 req.rawBody,
-                { "data": { "message": req.body, idSm: idSm, "transactions": [], "violations": [] } },
+                { "data": { "message": req.body, idSm: idSm, "channels": { "channel": null, "orgList": [] }, "transactions": [], "violations": {} } },
                 docCheckSum,
                 checksum(req.rawBody),
                 1,
@@ -180,6 +188,7 @@ exports.producerHandler = async function (req) {
         );
         return xml({ responseClaim: [{ idSm: sm }, { status: 0 }, { message: "Ок" }] });
     } catch (e) {
+        console.log(e)
         reg_info = `kafkaHandler. ошибка при вызову функции SELECT ${config.SYSTEM.dbFunctions.imesToQueue}`;
         reg_init.regError(idSm, docType, docCheckSum, 1, 1, docStateId, reg_info, sql, null, e);
     }

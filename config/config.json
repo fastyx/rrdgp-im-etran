@@ -5,9 +5,12 @@
     },
     "defaultChannel": "",
     "stages": {
-        "database": 100,
-        "blockchain": 200,
-        "violation": 300
+        "preparing": 100,
+        "database": 200,
+        "channel": 300,
+        "blockchain": 400,
+        "violation": 500,
+        "end": 0
     },
     "SYSTEM": {
         "dbTables": {
@@ -40,7 +43,9 @@
             "regSql": "rrd.reg_sql",
             "dues": "rrd.dues",
             "history": "rrd.history",
-            "bundleHistory": "rrd.bundle_history"
+            "bundleHistory": "rrd.bundle_history",
+            "tnOrgpassport": "nsi.tn_orgpassport",
+            "chaincodeChannels": "chaincode_channels"
         },
         "dbFunctions": {
             "editTracking": "rrd.edit_tracking",
@@ -74,6 +79,11 @@
                 "host": "localhost",
                 "port": "3030",
                 "name": "api/etran/claim"
+            },
+            "channel": {
+                "host": "localhost",
+                "port": "3000",
+                "name": "v1/channel"
             },
             "isrun": {
                 "name": "appinfo/isrun"

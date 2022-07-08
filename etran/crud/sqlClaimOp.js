@@ -292,8 +292,6 @@ exports.sqlClaimOp = async function (claim, client, config, response) {
                         ]);
                     }
                 } catch (e) {
-                    console.log("kjdkfhj")
-                    console.log(e)
                     reg_info = `Claim. sqlClaimOp: ошибка при INSERT в ${config.SYSTEM.dbTables.etranClaimPayer}  idSm=${claim.idSm}`;
                     reg_init.regError(claim.idSm, 12, claim.checkSum, 1, 1, claim.claimStateID, reg_info, sql, null, e);
                 }
@@ -301,24 +299,6 @@ exports.sqlClaimOp = async function (claim, client, config, response) {
                 reg_info = `Claim. sqlClaimOp: ошибка при DELETE из ${config.SYSTEM.dbTables.etranClaimPayer} idSm=${claim.idSm}`;
                 reg_init.regError(claim.idSm, 12, claim.checkSum, 1, 1, claim.claimStateID, reg_info, sql_del, null, e);
             }
-
-            /*
-            // запись в violation_reg
-            list = { condCheckList: response.data.data.condCheckList };
-            list = JSON.stringify(list);
-            logger.debug(`Claim. sqlClaimOp: вызов функции ${config.SYSTEM.dbFunctions.violationReg}. idSm=${response.data.data.sm.idSm}. condCheckList=${list}`);
-            try {
-                var sql_func = `SELECT ${config.SYSTEM.dbFunctions.violationReg} ($1,$2)`;
-                res_func = await client.query(sql_func, [response.data.data.sm.idSm, list]);
-                if (res_func.rows[0].violation_reg !== 0) {
-                    reg_info = `Claim. sqlClaimOp: RC ${config.SYSTEM.dbFunctions.violationReg} != 0. idSm=${response.data.data.sm.idSm}. condCheckList=${list}`;
-                    reg_init.regError(claim.idSm, 12, claim.checkSum, 2, 1, claim.claimStateID, reg_info, sql_func, null, null);
-                }
-            } catch (e) {
-                reg_info = `Claim. sqlClaimOp: ошибка при вызове функции ${config.SYSTEM.dbFunctions.violationReg} idSm=${response.data.data.sm.idSm}. condCheckList=${list}`;
-                reg_init.regError(claim.idSm, 12, claim.checkSum, 1, 1, claim.claimStateID, reg_info, sql_func, null, e);
-            }
-            */
 
             //Запись в role_org 
             if (claim.transaction === 'handleOp1') {
@@ -334,7 +314,6 @@ exports.sqlClaimOp = async function (claim, client, config, response) {
             }
         }
     } catch (e) {
-        console.log(e)
         reg_info = `Claim. sqlClaimOp: ошибка при select ${config.SYSTEM.dbTables.history} `;
         reg_init.regError(claim.idSm, 12, claim.checkSum, 1, 1, claim.claimStateID, reg_info, sql, null, e);
     }

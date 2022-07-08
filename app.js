@@ -24,8 +24,10 @@ app.listen(config.SYSTEM.restConfig.etranService.port, () => {
     require("./routes/post_routes/processConsumer.js")(app, httpRequestDurationMicroseconds);
     require("./routes/post_routes/processProducer.js")(app);
     require("./routes/get_routes/isrun.js")(app);
+    require(`./kafka/tableConsumerPreparing.js`);
     require(`./kafka/tableConsumerDatabase.js`);
-    require(`./kafka/tableConsumerBlockchain.js`);
-    require(`./kafka/tableConsumerViolation.js`);
+    //require(`./kafka/tableConsumerChannel.js`);
+    //require(`./kafka/tableConsumerBlockchain.js`);
+    //require(`./kafka/tableConsumerViolation.js`);
 });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

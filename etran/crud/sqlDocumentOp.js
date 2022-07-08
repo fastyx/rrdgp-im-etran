@@ -198,25 +198,6 @@ exports.sqlDocumentOp = async function (document, client, config, idSm, response
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            // запись в violation_reg
-            /*
-            list = { condCheckList: response.data.data.condCheckList };
-            list = JSON.stringify(list);
-            logger.debug(`Document. sqlDocumentOp: вызов функции ${config.SYSTEM.dbFunctions.violationReg}. idSm=${response.data.data.sm.idSm}. condCheckList=${list}`);
-            try {
-                var sql_func = `SELECT ${config.SYSTEM.dbFunctions.violationReg} ($1,$2)`;
-                res_func = await client.query(sql_func, [response.data.data.sm.idSm, list]);
-                if (res_func.rows[0].violation_reg !== 0) {
-                    reg_info = `Document. sqlDocumentOp: RC ${config.SYSTEM.dbFunctions.violationReg} != 0. idSm=${response.data.data.sm.idSm}. condCheckList=${list}`;
-                    reg_init.regError(idSm, document.docTypeId, document.checkSum, 1, 1, document.stateTransaction, reg_info, sql_func, null, null);
-                }
-            } catch (e) {
-                reg_info = `Document. sqlDocumentOp: ошибка при вызове функции ${config.SYSTEM.dbFunctions.violationReg} idSm=${response.data.data.sm.idSm}. condCheckList=${list}`;
-                reg_init.regError(idSm, document.docTypeId, document.checkSum, 1, 1, document.stateTransaction, reg_info, sql_func, null, e);
-            }
-            */
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // запись в dues
             if (document.stateTransaction === 177 || document.stateTransaction === 178) {
 

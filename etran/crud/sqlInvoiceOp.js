@@ -421,25 +421,6 @@ exports.sqlInvoiceOp = async function (invoice, client, config, response) {
                 }
             }
 
-            /*
-            // запись в violation_reg
-            list = { condCheckList: response.data.data.condCheckList };
-            list = JSON.stringify(list);
-            logger.debug(`Invoice. sqlInvoiceOp: вызов функции ${config.SYSTEM.dbFunctions.violationReg}. idSm=${response.data.data.sm.idSm}. condCheckList=${list}`);
-            try {
-                var sql_func = `SELECT ${config.SYSTEM.dbFunctions.violationReg} ($1,$2)`;
-                res_func = await client.query(sql_func, [response.data.data.sm.idSm, list]);
-                if (res_func.rows[0].violation_reg !== 0) {
-                    reg_info = `Invoice. sqlInvoiceOp: RC ${config.SYSTEM.dbFunctions.violationReg} != 0. idSm=${response.data.data.sm.idSm}. condCheckList=${list}`;
-                    reg_init.regError(invoice.idSm, 27, invoice.checkSum, 1, 1, invoice.invoiceStateID, reg_info, sql, null, null);
-                }
-            } catch (e) {
-                reg_info = `Invoice. sqlInvoiceOp: ошибка при вызове функции ${config.SYSTEM.dbFunctions.violationReg} idSm=${response.data.data.sm.idSm}. condCheckList=${list}`;
-                reg_init.regError(invoice.idSm, 27, invoice.checkSum, 1, 1, invoice.invoiceStateID, reg_info, sql, null, e);
-            }
-            */
-
-
             //Запись в role_org 
             if (invoice.transaction === 'handleOp16' || invoice.transaction === 'handleOp3') {
                 await selectInsertFromRoleOrg(config, client, invoice.invSenderId, 'sender', invoice.idSm, invoice.idSmInvoice);
