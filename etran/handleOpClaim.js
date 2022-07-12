@@ -2,6 +2,7 @@ const bc = require("../app");
 const xml = require('xml');                                 //для работы с XML
 const fs = require('fs');
 const logger = require('../config/logger');
+const config = require(`../init_config`);
 
 const reg_init = require('../reg_init');
 
@@ -13,7 +14,7 @@ const axios = require('axios').create(axiosDefaultConfig);
 const insClaimOp = require('./crud/sqlClaimOp.js');
 
 
-exports.handleOpClaim = async function (req, res, client, config, xmlCfg, claim) {
+exports.handleOpClaim = async function (claim) {
 
   let transactions = new Array();
 

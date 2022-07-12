@@ -4,7 +4,7 @@ const config = require('../../init_config');
 const bh = require('../../kafka/ProducerHandler');
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var appRouter = async function (app) {
-    app.post(`/${config.SYSTEM.restConfig.etranService.name}New`, async function (req, res) {
+    app.post(`/${config.SYSTEM.restConfig.etranService.name}`, async function (req, res) {
         var eventResult = `<responseClaim><status>1</status><message>Error in request process</message></responseClaim>`;   // Default response (filled manually for reliability)
         try {
             eventResult = await bh.producerHandler(req);

@@ -3,6 +3,7 @@ const logger = require('../config/logger');
 const opDoc = require('./handleOpDocument');
 const { v4: getuuid } = require('uuid');                   //для генерации уникального uuid
 const reg_init = require('../reg_init');
+const config = require(`../init_config`);
 
 // ГУ-2Б
 const { gu2bOp17 } = require('./dto/gu2bOp17.js')
@@ -15,19 +16,8 @@ const { gu45Op26b } = require('./dto/gu45Op26b.js')     //126b
 const { gu45Op58a } = require('./dto/gu45Op58a.js')
 const { gu45Op58b } = require('./dto/gu45Op58b.js')
 
-var req;
-var res;
-var client;
-var config;
-var xmlCfg;
-
 // ГУ-45, ГУ-2Б
-exports.processDocument452B = async function (in_req, in_res, in_client, in_config, in_xmlCfg, guDoc) {
-    req = in_req;
-    res = in_res;
-    client = in_client;
-    config = in_config;
-    xmlCfg = in_xmlCfg;
+exports.processDocument452B = async function (message, guDoc) {
 
     var handleOpArray = new Array();
 
@@ -52,6 +42,7 @@ exports.processDocument452B = async function (in_req, in_res, in_client, in_conf
         operType = null;
         idSmInvoice = null;
         opType = null;
+        console.log(idSm)
     }
     else if (guDoc.docTypeId === 7) {           // ГУ-45
         idSm = guDoc.idSm;
@@ -76,7 +67,8 @@ exports.processDocument452B = async function (in_req, in_res, in_client, in_conf
         opType = null;
     }
     else {
-        return xml({ responseClaim: [{ status: 1 }, { message: `Document: docTypeId не соответсвует документу ГУ-2Б и ГУ-45` }] });
+        reg_info = `Document: docTypeId не соответсвует документу ГУ-2Б и ГУ-45`
+        return { "status": 1, "message": reg_info };
     }
 
     // Определение временной зоны
@@ -94,7 +86,7 @@ exports.processDocument452B = async function (in_req, in_res, in_client, in_conf
         logger.debug(`Document: idSm=${idSm}`);
 
         // определение IdSmDoc
-        idSmDoc = await getIdSmDoc(config, client, idSm, docNumber, guDoc);
+        idSmDoc = await getIdSmDoc(idSm, docNumber, guDoc);
         logger.debug(`Document: idSmDoc=${idSmDoc}`);
 
         logger.info(`Document: начальный массив вагонов ${JSON.stringify(car)}`);
@@ -256,38 +248,38 @@ exports.processDocument452B = async function (in_req, in_res, in_client, in_conf
         if (handleOpArray.length !== 0) {
             // ГУ-45
             if (handleOpArray[0].handleOp === "14a") {
-                gu452B = await handleOp14aPrepare(idSmDoc);
+                gu452B = await handleOp14aPrepare(message, idSmDoc);
             }
             else if (handleOpArray[0].handleOp === "26a") {
-                gu452B = await handleOp26aPrepare(idSmDoc);
+                gu452B = await handleOp26aPrepare(message, idSmDoc);
             }
             else if (handleOpArray[0].handleOp === "58a") {
-                gu452B = await handleOp58aPrepare(idSmDoc);
+                gu452B = await handleOp58aPrepare(message, idSmDoc);
             }
             else if (handleOpArray[0].handleOp === "126a") {
-                gu452B = await handleOp126aPrepare(idSmDoc);
+                gu452B = await handleOp126aPrepare(message, idSmDoc);
             }
             else if (handleOpArray[0].handleOp === "14b") {
-                gu452B = await handleOp14bPrepare(idSmDoc);
+                gu452B = await handleOp14bPrepare(message, idSmDoc);
             }
             else if (handleOpArray[0].handleOp === "26b") {
-                gu452B = await handleOp26bPrepare(idSmDoc);
+                gu452B = await handleOp26bPrepare(message, idSmDoc);
             }
             else if (handleOpArray[0].handleOp === "58b") {
-                gu452B = await handleOp58bPrepare(idSmDoc);
+                gu452B = await handleOp58bPrepare(message, idSmDoc);
             }
             else if (handleOpArray[0].handleOp === "126b") {
-                gu452B = await handleOp126bPrepare(idSmDoc);
+                gu452B = await handleOp126bPrepare(message, idSmDoc);
             }
             // ГУ-2Б
             else if (handleOpArray[0].handleOp === "17") {
-                gu452B = await handleOp17Prepare(idSmDoc);
+                gu452B = await handleOp17Prepare(message, idSmDoc);
             }
             else if (handleOpArray[0].handleOp === "117") {
-                gu452B = await handleOp117Prepare(idSmDoc);
+                gu452B = await handleOp117Prepare(message, idSmDoc);
             }
             else if (handleOpArray[0].handleOp === "60") {
-                gu452B = await handleOp60Prepare(idSmDoc);
+                gu452B = await handleOp60Prepare(message, idSmDoc);
             }
         }
         else {
@@ -301,8 +293,9 @@ exports.processDocument452B = async function (in_req, in_res, in_client, in_conf
         reg_init.regError(idSm, guDoc.docTypeId, guDoc.checkSum, 2, 1, guDoc.stateTransaction, reg_info, null, null, null);
         return xml({ responseClaim: [{ status: 1 }, { message: `Document: в документе не передан idSm` }] });
     }
-    return await opDoc.handleOpDocument(req, res, client, config, xmlCfg, idSm, resCarArray, gu452B, null);
+    return await opDoc.handleOpDocument(idSm, resCarArray, gu452B, null);
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -484,87 +477,87 @@ async function getExportCodes(invFromStationCode, invToStationCode, stationCode,
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Заготовки handleOp для ГУ-2Б и ГУ-45
-async function handleOp14aPrepare(idSmDoc) {
-    gu452B = new gu45Op14a(req, xmlCfg);
+async function handleOp14aPrepare(message, idSmDoc) {
+    gu452B = new gu45Op14a(message);
     gu452B.idSmDoc = idSmDoc;
     await setStateId(gu452B.stateTransaction, idSmDoc, gu452B.transaction, gu452B);
     return gu452B;
 }
-async function handleOp14bPrepare(idSmDoc) {
-    gu452B = new gu45Op14b(req, xmlCfg);
+async function handleOp14bPrepare(message, idSmDoc) {
+    gu452B = new gu45Op14b(message);
     gu452B.idSmDoc = idSmDoc;
     await setStateId(gu452B.stateTransaction, idSmDoc, gu452B.transaction, gu452B);
     return gu452B;
 }
-async function handleOp26aPrepare(idSmDoc) {
-    gu452B = new gu45Op26a(req, xmlCfg);
+async function handleOp26aPrepare(message, idSmDoc) {
+    gu452B = new gu45Op26a(message);
     gu452B.idSmDoc = idSmDoc;
     gu452B.stateTransaction = 26;
     gu452B.transaction = "handleOp26a";
     await setStateId(gu452B.stateTransaction, idSmDoc, gu452B.transaction, gu452B);
     return gu452B;
 }
-async function handleOp26bPrepare(idSmDoc) {
-    gu452B = new gu45Op26b(req, xmlCfg);
+async function handleOp26bPrepare(message, idSmDoc) {
+    gu452B = new gu45Op26b(message);
     gu452B.stateTransaction = 26;
     gu452B.transaction = "handleOp26b";
     gu452B.idSmDoc = idSmDoc;
     await setStateId(gu452B.stateTransaction, idSmDoc, gu452B.transaction, gu452B);
     return gu452B;
 }
-async function handleOp126aPrepare(idSmDoc) {
-    gu452B = new gu45Op26a(req, xmlCfg);
+async function handleOp126aPrepare(message, idSmDoc) {
+    gu452B = new gu45Op26a(message);
     gu452B.idSmDoc = idSmDoc;
     gu452B.stateTransaction = 126;
     gu452B.transaction = "handleOp126a";
     await setStateId(gu452B.stateTransaction, idSmDoc, gu452B.transaction, gu452B);
     return gu452B;
 }
-async function handleOp126bPrepare(idSmDoc) {
-    gu452B = new gu45Op26b(req, xmlCfg);
+async function handleOp126bPrepare(message, idSmDoc) {
+    gu452B = new gu45Op26b(message);
     gu452B.stateTransaction = 126;
     gu452B.transaction = "handleOp126b";
     gu452B.idSmDoc = idSmDoc;
     await setStateId(gu452B.stateTransaction, idSmDoc, gu452B.transaction, gu452B);
     return gu452B;
 }
-async function handleOp58aPrepare(idSmDoc) {
-    gu452B = new gu45Op58a(req, xmlCfg);
+async function handleOp58aPrepare(message, idSmDoc) {
+    gu452B = new gu45Op58a(message);
     gu452B.idSmDoc = idSmDoc;
     await setStateId(gu452B.stateTransaction, idSmDoc, gu452B.transaction, gu452B);
     return gu452B;
 }
-async function handleOp58bPrepare(idSmDoc) {
-    gu452B = new gu45Op58b(req, xmlCfg);
+async function handleOp58bPrepare(message, idSmDoc) {
+    gu452B = new gu45Op58b(message);
     gu452B.idSmDoc = idSmDoc;
     await setStateId(gu452B.stateTransaction, idSmDoc, gu452B.transaction, gu452B);
     return gu452B;
 }
-async function handleOp17Prepare(idSmDoc) {
-    gu452B = new gu2bOp17(req, xmlCfg);
+async function handleOp17Prepare(message, idSmDoc) {
+    gu452B = new gu2bOp17(message);
     gu452B.idSmDoc = idSmDoc;
     gu452B.transaction = "handleOp17";
     gu452B.stateTransaction = 17;
     await setStateId(gu452B.stateTransaction, idSmDoc, gu452B.transaction, gu452B);
     return gu452B;
 }
-async function handleOp117Prepare(idSmDoc) {
-    gu452B = new gu2bOp17(req, xmlCfg);
+async function handleOp117Prepare(message, idSmDoc) {
+    gu452B = new gu2bOp17(message);
     gu452B.idSmDoc = idSmDoc;
     gu452B.transaction = "handleOp117";
     gu452B.stateTransaction = 117;
     await setStateId(gu452B.stateTransaction, idSmDoc, gu452B.transaction, gu452B);
     return gu452B;
 }
-async function handleOp60Prepare(idSmDoc) {
-    gu452B = new gu2bOp60(req, xmlCfg);
+async function handleOp60Prepare(message, idSmDoc) {
+    gu452B = new gu2bOp60(message);
     gu452B.idSmDoc = idSmDoc;
     await setStateId(gu452B.stateTransaction, idSmDoc, gu452B.transaction, gu452B);
     return gu452B;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-async function getIdSmDoc(config, client, idSm, docNumber, guDoc) {
+async function getIdSmDoc(idSm, docNumber, guDoc) {
     logger.debug(`Document: определение idSmDoc из ${config.SYSTEM.dbTables.bundleDocument} по doc_number = ${docNumber} и id_sm = ${idSm} `);
     try {
         var sql = `SELECT id_sm_doc from ${config.SYSTEM.dbTables.bundleDocument} where id_sm = ($1) and doc_number = ($2)`;

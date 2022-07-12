@@ -1,12 +1,11 @@
 const { BaseGu45 } = require('./baseGu45.js')
-const { v4: getuuid } = require('uuid');                   //для генерации уникального uuid
 
 class gu45Op58b extends BaseGu45 {
 
-    constructor(req, xmlCfg, res) {
+    constructor(message) {
 
         //BaseGu2b
-        super(req, xmlCfg, res);
+        super(message);
 
         //HandleOp
         this.transaction = "handleOp58b";
@@ -24,16 +23,16 @@ class gu45Op58b extends BaseGu45 {
         this.docTypeId = 7;
 
         //rejectTrackDeliveryGu45Dt
-        if (typeof xmlCfg.gu_45_doc_route.operdate === 'undefined') { this.rejectTrackDeliveryGu45Dt = "0001-01-01 00:00:00.00000+00"; }
+        if (typeof message.requestnotification.pps.operdate === 'undefined') { this.rejectTrackDeliveryGu45Dt = "0001-01-01 00:00:00.00000+00"; }
         else {
-            this.rejectTrackDeliveryGu45Dt = xmlCfg.gu_45_doc_route.operdate;
+            this.rejectTrackDeliveryGu45Dt = message.requestnotification.pps.operdate;
         }
         //console.log("this.rejectTrackDeliveryGu45Dt = " + this.rejectTrackDeliveryGu45Dt);
 
         //epochRejectTrackDeliveryGu45Dt
-        if (typeof xmlCfg.gu_45_doc_route.operdate === 'undefined') { this.epochRejectTrackDeliveryGu45Dt = null; }
+        if (typeof message.requestnotification.pps.operdate === 'undefined') { this.epochRejectTrackDeliveryGu45Dt = null; }
         else {
-            this.epochRejectTrackDeliveryGu45Dt = xmlCfg.gu_45_doc_route.operdate;
+            this.epochRejectTrackDeliveryGu45Dt = message.requestnotification.pps.operdate;
             this.a = this.epochRejectTrackDeliveryGu45Dt.split(" ");
             this.a[0] = this.a[0].split(".").reverse().join(".");
             this.epochRejectTrackDeliveryGu45Dt = this.a[0] + " " + this.a[1];

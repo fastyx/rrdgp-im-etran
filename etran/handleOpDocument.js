@@ -2,6 +2,7 @@ const bc = require("../app");
 const xml = require('xml');                                 //для работы с XML
 const fs = require('fs');
 const logger = require('../config/logger');
+const config = require(`../init_config`);
 
 const reg_init = require('../reg_init');
 
@@ -12,7 +13,7 @@ const axios = require('axios').create(axiosDefaultConfig);
 
 const sqlDoc = require('./crud/sqlDocumentOp.js');
 
-exports.handleOpDocument = async function (req, res, client, config, xmlCfg, idSm, resCarArray, guDoc, cumDue) {
+exports.handleOpDocument = async function (idSm, resCarArray, guDoc, cumDue) {
 
     let transactions = new Array();
 

@@ -1,5 +1,6 @@
 const xml = require('xml');                                 //для работы с XML
 const logger = require('../config/logger');
+const config = require(`../init_config`);
 
 // Накладная
 const opInvoice = require('./handleOpInvoice');
@@ -23,134 +24,134 @@ const { InvoiceOp2155 } = require('./dto/invoiceOp2155.js')
 
 const reg_init = require('../reg_init');
 
-exports.processInvoice = async function (req, res, client, config, xmlCfg) {
+exports.processInvoice = async function (message) {
 
-    if (!(typeof xmlCfg.invoice_doc_route.invoicestateid === 'undefined')) {
-        logger.debug(`Invoice: найден xmlCfg.claim_doc_route.invoicestateid=${xmlCfg.invoice_doc_route.invoicestateid.$.value}`);
-        logger.debug(`Invoice: значение idSm=${xmlCfg.invoice_root_route.idsm}`);
-        var idSm = xmlCfg.invoice_root_route.idsm;
+    if (!(typeof message.requestinvoice.invoice.invoicestateid === 'undefined')) {
+        logger.debug(`Invoice: найден xmlCfg.claim_doc_route.invoicestateid=${message.requestinvoice.invoice.invoicestateid.$.value}`);
+        logger.debug(`Invoice: значение idSm=${message.requestinvoice.idsm}`);
+        var idSm = message.requestinvoice.idsm;
         try {
             var sql = `SELECT claim_number from ${config.SYSTEM.dbTables.bundleClaim} WHERE id_sm=($1)`;
             result = await client.query(sql, [idSm]);
         } catch (e) {
             reg_info = `Invoice: ошибка при чтении  ${config.SYSTEM.dbTables.bundleClaim} idSm=${idSm}`;
-            reg_init.regError(idSm, 27, null, 1, 1, xmlCfg.invoice_doc_route.invoicestateid.$.value, reg_info, sql, null, e);
-            return xml({ responseClaim: [{ status: 1 }, { message: reg_info }] });                                                              // +++ tests (send <invoice_31> Invoice: ошибка при чтении  ${config.SYSTEM.dbTables.bundleClaim}) +++
+            reg_init.regError(idSm, 27, null, 1, 1, message.requestinvoice.invoice.invoicestateid.$.value, reg_info, sql, null, e);
+            return { "status": 1, "message": reg_info };
         }
 
         if (result.rowCount !== 0) {
-            if (!(typeof xmlCfg.invoice_doc_route.invloadclaim_number === 'undefined')) {
-                invoiceClaimNumberStr = xmlCfg.invoice_doc_route.invloadclaim_number.$.value;
+            if (!(typeof message.requestinvoice.invoice.invloadclaim_number === 'undefined')) {
+                invoiceClaimNumberStr = message.requestinvoice.invoice.invloadclaim_number.$.value;
                 let invoiceClaimNumberArray = invoiceClaimNumberStr.split('-');
                 let invoiceClaimNumber = invoiceClaimNumberArray[0];
                 if (result.rows[0].claim_number === invoiceClaimNumber) {
                     statusInvoice = 1;                                              // порожняя
-                    switch (Number(xmlCfg.invoice_doc_route.invoicestateid.$.value)) {
+                    switch (Number(message.requestinvoice.invoice.invoicestateid.$.value)) {
                         case 439:
                             invoice = new InvoiceOp03(req, xmlCfg, statusInvoice);
-                            invoice.idSmInvoice = await getIdSmInvoice(config, client, invoice);
+                            invoice.idSmInvoice = await getIdSmInvoice(invoice);
                             break;
                         case 31:
-                            invoice = new InvoiceOp2004a(req, xmlCfg, statusInvoice);
+                            invoice = new InvoiceOp2004a(message, statusInvoice);
                             break;
                         case 440:
-                            invoice = new InvoiceOp2004r(req, xmlCfg, statusInvoice);
+                            invoice = new InvoiceOp2004r(message, statusInvoice);
                             break;
                         case 1179: case 1116:
-                            invoice = new InvoiceOp2005a(req, xmlCfg, statusInvoice);
+                            invoice = new InvoiceOp2005a(message, statusInvoice);
                             break;
                         case 872:
-                            invoice = new InvoiceOp2005r(req, xmlCfg, statusInvoice);
+                            invoice = new InvoiceOp2005r(message, statusInvoice);
                             break;
                         case 35:
-                            invoice = new InvoiceOp04(req, xmlCfg, statusInvoice);
+                            invoice = new InvoiceOp04(message, statusInvoice);
                             break;
                         case 38:
-                            invoice = new InvoiceOp10(req, xmlCfg, statusInvoice);
+                            invoice = new InvoiceOp10(message, statusInvoice);
                             break;
                         case 42:
-                            invoice = new InvoiceOp11(req, xmlCfg, statusInvoice);
+                            invoice = new InvoiceOp11(message, statusInvoice);
                             break;
                         case 44: case 117:
-                            invoice = new InvoiceOp2111(req, xmlCfg, statusInvoice);
+                            invoice = new InvoiceOp2111(message, statusInvoice);
                             break;
                         default:
-                            reg_info = `Invoice: не найден handleOp для stateId=${xmlCfg.invoice_doc_route.invoicestateid.$.value}`;
-                            reg_init.regError(idSm, 27, null, 2, 1, xmlCfg.invoice_doc_route.invoicestateid.$.value, reg_info, null, null, null);
-                            return xml({ responseClaim: [{ status: 1 }, { message: reg_info }] });
+                            reg_info = `Invoice: не найден handleOp для stateId=${message.requestinvoice.invoice.invoicestateid.$.value}`;
+                            reg_init.regError(idSm, 27, null, 2, 1, message.requestinvoice.invoice.invoicestateid.$.value, reg_info, null, null, null);
+                            return { "status": 1, "message": reg_info };
                     }
                 }
                 else {
                     reg_info = `Invoice: claim_number=${result.rows[0].claim_number} != invloadclaim_number=${invoiceClaimNumber}`;
-                    reg_init.regError(idSm, 27, null, 2, 1, xmlCfg.invoice_doc_route.invoicestateid.$.value, reg_info, null, null, null);
-                    return xml({ responseClaim: [{ status: 1 }, { message: reg_info }] });
+                    reg_init.regError(idSm, 27, null, 2, 1, message.requestinvoice.invoice.invoicestateid.$.value, reg_info, null, null, null);
+                    return { "status": 1, "message": reg_info };
                 }
             }
-            else if (!(typeof xmlCfg.invoice_doc_route.invclaimnumber === 'undefined')) {
-                invoiceClaimNumberStr = xmlCfg.invoice_doc_route.invclaimnumber.$.value;
+            else if (!(typeof message.requestinvoice.invoice.invclaimnumber === 'undefined')) {
+                invoiceClaimNumberStr = message.requestinvoice.invoice.invclaimnumber.$.value;
                 let invoiceClaimNumberArray = invoiceClaimNumberStr.split('-');
                 let invoiceClaimNumber = invoiceClaimNumberArray[0];
                 if (result.rows[0].claim_number === invoiceClaimNumber) {
                     statusInvoice = 2;                                              // груженая
-                    switch (Number(xmlCfg.invoice_doc_route.invoicestateid.$.value)) {
+                    switch (Number(message.requestinvoice.invoice.invoicestateid.$.value)) {
                         case 31: case 429:
-                            invoice = new InvoiceOp16(req, xmlCfg, statusInvoice);
-                            invoice.idSmInvoice = await getIdSmInvoice(config, client, invoice);
+                            invoice = new InvoiceOp16(message, statusInvoice);
+                            invoice.idSmInvoice = await getIdSmInvoice(invoice);
                             break;
                         case 1116: case 1179:
-                            invoice = new InvoiceOp21a(req, xmlCfg, statusInvoice);
+                            invoice = new InvoiceOp21a(message, statusInvoice);
                             break;
                         case 872:
-                            invoice = new InvoiceOp21r(req, xmlCfg, statusInvoice);
+                            invoice = new InvoiceOp21r(message, statusInvoice);
                             break;
                         case 35:
-                            invoice = new InvoiceOp24(req, xmlCfg, statusInvoice);
+                            invoice = new InvoiceOp24(message, statusInvoice);
                             break;
                         case 38:
-                            invoice = new InvoiceOp47(req, xmlCfg, statusInvoice);
+                            invoice = new InvoiceOp47(message, statusInvoice);
                             break;
                         case 42:
-                            invoice = new InvoiceOp55(req, xmlCfg, statusInvoice);
+                            invoice = new InvoiceOp55(message, statusInvoice);
                             break;
                         case 44: case 117:
-                            invoice = new InvoiceOp2155(req, xmlCfg, statusInvoice);
+                            invoice = new InvoiceOp2155(message, statusInvoice);
                             break;
                         default:
-                            reg_info = `Invoice: не найден handleOp для stateId=${xmlCfg.invoice_doc_route.invoicestateid.$.value}`;
-                            reg_init.regError(idSm, 27, null, 2, 1, xmlCfg.invoice_doc_route.invoicestateid.$.value, reg_info, null, null, null);
-                            return xml({ responseClaim: [{ status: 1 }, { message: reg_info }] });
+                            reg_info = `Invoice: не найден handleOp для stateId=${message.requestinvoice.invoice.invoicestateid.$.value}`;
+                            reg_init.regError(idSm, 27, null, 2, 1, message.requestinvoice.invoice.invoicestateid.$.value, reg_info, null, null, null);
+                            return { "status": 1, "message": reg_info };
                     }
                 }
                 else {
                     reg_info = `Invoice: claim_number=${result.rows[0].claim_number} != invclaimnumber=${invoiceClaimNumber}`;
-                    reg_init.regError(idSm, 27, null, 2, 1, xmlCfg.invoice_doc_route.invoicestateid.$.value, reg_info, null, null, null);
-                    return xml({ responseClaim: [{ status: 1 }, { message: reg_info }] });      // +++ tests (send <invoice_31> Invoice: claim_number != invclaimnumber) +++
+                    reg_init.regError(idSm, 27, null, 2, 1, message.requestinvoice.invoice.invoicestateid.$.value, reg_info, null, null, null);
+                    return { "status": 1, "message": reg_info };
                 }
             }
             else {
-                reg_info = `Invoice. SQL_message: не найден xmlCfg.invoice_doc_route.invloadclaim_number или xmlCfg.invoice_doc_route.invclaimnumber`;
-                reg_init.regError(idSm, 27, null, 2, 1, xmlCfg.invoice_doc_route.invoicestateid.$.value, reg_info, null, null, null);
-                return xml({ responseClaim: [{ status: 1 }, { message: reg_info }] });          // +++ tests (Invoice. SQL_message: не найден xmlCfg.invoice_doc_route.invloadclaim_number или xmlCfg.invoice_doc_route.invclaimnumber) +++
+                reg_info = `Invoice. SQL_message: не найден message.requestinvoice.invoice.invloadclaim_number или message.requestinvoice.invoice.invclaimnumber`;
+                reg_init.regError(idSm, 27, null, 2, 1, message.requestinvoice.invoice.invoicestateid.$.value, reg_info, null, null, null);
+                return { "status": 1, "message": reg_info };
             }
         }
         else {
             reg_info = `Invoice. SQL_message: не найден claim_number по id_sm = ${idSm} в ${config.SYSTEM.dbTables.bundleClaim}`;
-            reg_init.regError(idSm, 27, null, 2, 1, xmlCfg.invoice_doc_route.invoicestateid.$.value, reg_info, sql, null, null);
-            return xml({ responseClaim: [{ status: 1 }, { message: reg_info }] });      // +++ tests (`send <invoice_31> Invoice. SQL_message: не найден claim_number по id_sm`) +++
+            reg_init.regError(idSm, 27, null, 2, 1, message.requestinvoice.invoice.invoicestateid.$.value, reg_info, sql, null, null);
+            return { "status": 1, "message": reg_info };
         }
     }
     else {
         reg_info = `Invoice: не найден путь xmlCfg.claim_doc_route.invoicestateid`;
         reg_init.regError(idSm, 27, null, 2, 1, null, reg_info, null, null, null);
-        return xml({ responseClaim: [{ status: 1 }, { message: reg_info }] });      //+++ tests (send <invoice_31> Invoice: не найден путь xmlCfg.claim_doc_route.invoicestateid) +++
+        return { "status": 1, "message": reg_info };
     }
 
-    return await opInvoice.handleOpInvoice(req, res, client, config, xmlCfg, invoice);
+    return await opInvoice.handleOpInvoice(invoice);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-async function getIdSmInvoice(config, client, invoice) {
+async function getIdSmInvoice(invoice) {
     try {
         logger.debug(`Invoice: определяем id_sm_invoice из ${config.SYSTEM.dbTables.etranInvoice} по ${invoice.invUnp} `);
         sql = `select id_sm_invoice from ${config.SYSTEM.dbTables.etranInvoice} where inv_unp = ($1)`

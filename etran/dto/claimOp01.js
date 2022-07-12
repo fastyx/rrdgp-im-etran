@@ -3,13 +3,10 @@ const { v4: getuuid } = require('uuid');                   //для генера
 
 class ClaimOp01 extends BaseClaim {
 
-    constructor(req, xmlCfg, res) {
+    constructor(message) {
 
         //BaseClaim
-        super(req, xmlCfg, res);
-
-        //Уникальный номер SM
-        //this.idSm = getuuid();
+        super(message);
 
         //HandleOp
         this.transaction = "handleOp1";
@@ -21,16 +18,16 @@ class ClaimOp01 extends BaseClaim {
         this.opts = null;
 
         //claimRegDate
-        if (typeof xmlCfg.claim_doc_route.operdate === 'undefined') { this.claimRegDate = "0001-01-01 00:00:00.00000+00"; }
+        if (typeof message.requestclaim.claim.operdate === 'undefined') { this.claimRegDate = "0001-01-01 00:00:00.00000+00"; }
         else {
-            this.claimRegDate = xmlCfg.claim_doc_route.operdate.$.value;
+            this.claimRegDate = message.requestclaim.claim.operdate.$.value;
         }
         //console.log("this.claimRegDate = " + this.claimRegDate);
 
         //epochClaimRegDate
-        if (typeof xmlCfg.claim_doc_route.operdate === 'undefined') { this.epochClaimRegDate = null; }
+        if (typeof message.requestclaim.claim.operdate === 'undefined') { this.epochClaimRegDate = null; }
         else {
-            this.epochClaimRegDate = xmlCfg.claim_doc_route.operdate.$.value;
+            this.epochClaimRegDate = message.requestclaim.claim.operdate.$.value;
             this.a = this.epochClaimRegDate.split(" ");
             this.a[0] = this.a[0].split(".").reverse().join(".");
             this.epochClaimRegDate = this.a[0] + " " + this.a[1];
@@ -39,9 +36,9 @@ class ClaimOp01 extends BaseClaim {
         //console.log("this.epochClaimRegDate = " + this.epochClaimRegDate);
 
         //clmStartDate
-        if (typeof xmlCfg.claim_doc_route.clmstartdate === 'undefined') { this.clmStartDate = "0001-01-01 00:00:00.00000+00"; }
+        if (typeof message.requestclaim.claim.clmstartdate === 'undefined') { this.clmStartDate = "0001-01-01 00:00:00.00000+00"; }
         else {
-            this.clmStartDate = xmlCfg.claim_doc_route.clmstartdate.$.value;
+            this.clmStartDate = message.requestclaim.claim.clmstartdate.$.value;
             this.a = this.clmStartDate.split(" ");
             this.a[0] = this.a[0].split(".").reverse().join(".");
             this.clmStartDate = this.a[0] + " " + this.a[1];
@@ -49,9 +46,9 @@ class ClaimOp01 extends BaseClaim {
         //console.log("this.clmStartDate = " + this.clmStartDate);
 
         //epochClmStartDate
-        if (typeof xmlCfg.claim_doc_route.clmstartdate === 'undefined') { this.epochClmStartDate = null; }
+        if (typeof message.requestclaim.claim.clmstartdate === 'undefined') { this.epochClmStartDate = null; }
         else {
-            this.epochClmStartDate = xmlCfg.claim_doc_route.clmstartdate.$.value;
+            this.epochClmStartDate = message.requestclaim.claim.clmstartdate.$.value;
             this.a = this.epochClmStartDate.split(" ");
             this.a[0] = this.a[0].split(".").reverse().join(".");
             this.epochClmStartDate = this.a[0] + " " + this.a[1];

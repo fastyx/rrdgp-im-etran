@@ -3,10 +3,10 @@ const { v4: getuuid } = require('uuid');                   //для генера
 
 class InvoiceOp60 extends BaseInvoice {
 
-    constructor(req, xmlCfg, statusInvoice, res) {
+    constructor(message, statusInvoice) {
 
         //BaseInvoice
-        super(req, xmlCfg, statusInvoice, res);
+        super(message, statusInvoice);
 
         //HandleOp
         this.transaction = "handleOp60";
@@ -18,16 +18,16 @@ class InvoiceOp60 extends BaseInvoice {
         this.opts = null;
 
         //ladenCargoEndNotificationDt
-        if (typeof req.body.getinvoicereply.operdate === 'undefined') { this.ladenCargoEndNotificationDt = "0001-01-01 00:00:00.00000+00"; }
+        if (typeof message.requestinvoice.invoice.operdate === 'undefined') { this.ladenCargoEndNotificationDt = "0001-01-01 00:00:00.00000+00"; }
         else {
-            this.ladenCargoEndNotificationDt = req.body.getinvoicereply.operdate.$.value;
+            this.ladenCargoEndNotificationDt = message.requestinvoice.invoice.operdate.$.value;
         }
         //console.log("this.ladenCargoEndNotificationDt = " + this.ladenCargoEndNotificationDt);
 
         //epochLadenCargoEndNotificationDt
-        if (typeof req.body.getinvoicereply.operdate === 'undefined') { this.epochLadenCargoEndNotificationDt = null; }
+        if (typeof message.requestinvoice.invoice.operdate === 'undefined') { this.epochLadenCargoEndNotificationDt = null; }
         else {
-            this.epochLadenCargoEndNotificationDt = (new Date(req.body.getinvoicereply.operdate.$.value)).getTime();               //преобразование в epoch (кажется косячит в формате DD.MM.YYYY а он делает MM.DD.YYYY )
+            this.epochLadenCargoEndNotificationDt = (new Date(message.requestinvoice.invoice.operdate.$.value)).getTime();               //преобразование в epoch (кажется косячит в формате DD.MM.YYYY а он делает MM.DD.YYYY )
         }
         //console.log("this.epochLadenCargoEndNotificationDt = " + this.epochLadenCargoEndNotificationDt);
     }

@@ -3,10 +3,10 @@ const { v4: getuuid } = require('uuid');                   //для генера
 
 class InvoiceOp11 extends BaseInvoice {
 
-    constructor(req, xmlCfg, statusInvoice, res) {
+    constructor(message, statusInvoice) {
 
         //BaseInvoice
-        super(req, xmlCfg, statusInvoice, res);
+        super(message, statusInvoice);
 
         //HandleOp
         this.transaction = "handleOp11";
@@ -21,9 +21,9 @@ class InvoiceOp11 extends BaseInvoice {
         this.opts = null;
 
         //epochInvDateDelivery
-        if (typeof xmlCfg.invoice_doc_route.operdate === 'undefined') { this.epochInvDateDelivery = null; }
+        if (typeof message.requestinvoice.invoice.operdate === 'undefined') { this.epochInvDateDelivery = null; }
         else {
-            this.epochInvDateDelivery = xmlCfg.invoice_doc_route.operdate.$.value;
+            this.epochInvDateDelivery = message.requestinvoice.invoice.operdate.$.value;
             this.a = this.epochInvDateDelivery.split(" ");
             this.a[0] = this.a[0].split(".").reverse().join(".");
             this.epochInvDateDelivery = this.a[0] + " " + this.a[1];

@@ -3,10 +3,10 @@ const { v4: getuuid } = require('uuid');                   //для генера
 
 class InvoiceOp2155 extends BaseInvoice {
 
-    constructor(req, xmlCfg, statusInvoice, res) {
+    constructor(message, statusInvoice)  {
 
         //BaseInvoice
-        super(req, xmlCfg, statusInvoice, res);
+        super(message, statusInvoice) ;
 
         //HandleOp
         this.transaction = "handleOp2155";
@@ -22,16 +22,16 @@ class InvoiceOp2155 extends BaseInvoice {
 
         if (this.invoiceStateID === '44') {
             //invDateEnd
-            if (typeof xmlCfg.invoice_doc_route.invlastoper === 'undefined') { this.invDateEnd = "0001-01-01 00:00:00.00000+00"; }
+            if (typeof message.requestinvoice.invoice.invlastoper === 'undefined') { this.invDateEnd = "0001-01-01 00:00:00.00000+00"; }
             else {
-                this.invDateEnd = xmlCfg.invoice_doc_route.invlastoper.$.value;
+                this.invDateEnd = message.requestinvoice.invoice.invlastoper.$.value;
             }
             //console.log("this.invDateEnd = " + this.invDateEnd);
 
             //epochInvDateEnd
-            if (typeof xmlCfg.invoice_doc_route.invlastoper === 'undefined') { this.epochInvDateEnd = null; }
+            if (typeof message.requestinvoice.invoice.invlastoper === 'undefined') { this.epochInvDateEnd = null; }
             else {
-                this.epochInvDateEnd = xmlCfg.invoice_doc_route.invlastoper.$.value;
+                this.epochInvDateEnd = message.requestinvoice.invoice.invlastoper.$.value;
                 this.a = this.epochInvDateEnd.split(" ");
                 this.a[0] = this.a[0].split(".").reverse().join(".");
                 this.epochInvDateEnd = this.a[0] + " " + this.a[1];
@@ -41,16 +41,16 @@ class InvoiceOp2155 extends BaseInvoice {
         }
         if (this.invoiceStateID === '117') {
             //invDateEnd
-            if (typeof xmlCfg.invoice_doc_route.operdate === 'undefined') { this.invDateEnd = "0001-01-01 00:00:00.00000+00"; }
+            if (typeof message.requestinvoice.invoice.operdate === 'undefined') { this.invDateEnd = "0001-01-01 00:00:00.00000+00"; }
             else {
-                this.invDateEnd = xmlCfg.invoice_doc_route.operdate.$.value;
+                this.invDateEnd = message.requestinvoice.invoice.operdate.$.value;
             }
             //console.log("this.invDateEnd = " + this.invDateEnd);
 
             //epochInvDateEnd
-            if (typeof xmlCfg.invoice_doc_route.operdate === 'undefined') { this.epochInvDateEnd = null; }
+            if (typeof message.requestinvoice.invoice.operdate === 'undefined') { this.epochInvDateEnd = null; }
             else {
-                this.epochInvDateEnd = xmlCfg.invoice_doc_route.operdate.$.value;
+                this.epochInvDateEnd = message.requestinvoice.invoice.operdate.$.value;
                 this.a = this.epochInvDateEnd.split(" ");
                 this.a[0] = this.a[0].split(".").reverse().join(".");
                 this.epochInvDateEnd = this.a[0] + " " + this.a[1];

@@ -3,10 +3,10 @@ const { v4: getuuid } = require('uuid');                   //для генера
 
 class InvoiceOp03 extends BaseInvoice {
 
-    constructor(req, xmlCfg, statusInvoice, res) {
+    constructor(message, statusInvoice) {
 
         //BaseInvoice
-        super(req, xmlCfg, statusInvoice, res);
+        super(message, statusInvoice);
 
         //Уникальный номер SM
         this.idSmInvoice = getuuid();
@@ -21,16 +21,16 @@ class InvoiceOp03 extends BaseInvoice {
         this.opts = null;
 
         //invDateCreate
-        if (typeof xmlCfg.invoice_doc_route.operdate === 'undefined') { this.invDateCreate = "0001-01-01 00:00:00.00000+00"; }
+        if (typeof message.requestinvoice.invoice.operdate === 'undefined') { this.invDateCreate = "0001-01-01 00:00:00.00000+00"; }
         else {
-            this.invDateCreate = xmlCfg.invoice_doc_route.operdate.$.value;
+            this.invDateCreate = message.requestinvoice.invoice.operdate.$.value;
         }
         //console.log("this.invDateCreate = " + this.invDateCreate);
 
         //epochInvDateCreate
-        if (typeof xmlCfg.invoice_doc_route.operdate === 'undefined') { this.epochInvDateCreate = null; }
+        if (typeof message.requestinvoice.invoice.operdate === 'undefined') { this.epochInvDateCreate = null; }
         else {
-            this.epochInvDateCreate = xmlCfg.invoice_doc_route.operdate.$.value;
+            this.epochInvDateCreate = message.requestinvoice.invoice.operdate.$.value;
             this.a = this.epochInvDateCreate.split(" ");
             this.a[0] = this.a[0].split(".").reverse().join(".");
             this.epochInvDateCreate = this.a[0] + " " + this.a[1];

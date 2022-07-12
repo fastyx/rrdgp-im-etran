@@ -3,10 +3,10 @@ const { v4: getuuid } = require('uuid');                   //для генера
 
 class gu2bOp17 extends BaseGu2b {
 
-    constructor(req, xmlCfg, res) {
+    constructor(message) {
 
         //BaseGu2b
-        super(req, xmlCfg, res);
+        super(message);
 
         //HandleOp
         this.transaction = null;                    // "handleOp17" "handleOp117"
@@ -21,16 +21,16 @@ class gu2bOp17 extends BaseGu2b {
         this.idSmDoc = null;
 
         //emptyCargoEndNotificationDt
-        if (typeof xmlCfg.gu_2b_doc_route.crgdatecreate === 'undefined') { this.emptyCargoEndNotificationDt = "0001-01-01 00:00:00.00000+00"; }
+        if (typeof message.requestnotification.notificationgu2b.crgdatecreate === 'undefined') { this.emptyCargoEndNotificationDt = "0001-01-01 00:00:00.00000+00"; }
         else {
-            this.emptyCargoEndNotificationDt = xmlCfg.gu_2b_doc_route.crgdatecreate.$.value;
+            this.emptyCargoEndNotificationDt = message.requestnotification.notificationgu2b.crgdatecreate.$.value;
         }
         //console.log("this.emptyCargoEndNotificationDt = " + this.emptyCargoEndNotificationDt);
 
         //epochEmptyCargoEndNotificationDt 
-        if (typeof xmlCfg.gu_2b_doc_route.crgdatecreate === 'undefined') { this.epochEmptyCargoEndNotificationDt = null; }
+        if (typeof message.requestnotification.notificationgu2b.crgdatecreate === 'undefined') { this.epochEmptyCargoEndNotificationDt = null; }
         else {
-            this.epochEmptyCargoEndNotificationDt = xmlCfg.gu_2b_doc_route.crgdatecreate.$.value;
+            this.epochEmptyCargoEndNotificationDt = message.requestnotification.notificationgu2b.crgdatecreate.$.value;
             this.a = this.epochEmptyCargoEndNotificationDt.split(" ");
             this.a[0] = this.a[0].split(".").reverse().join(".");
             this.epochEmptyCargoEndNotificationDt = this.a[0] + " " + this.a[1];

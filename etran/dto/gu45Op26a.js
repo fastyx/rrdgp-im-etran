@@ -1,12 +1,11 @@
 const { BaseGu45 } = require('./baseGu45.js')
-const { v4: getuuid } = require('uuid');                   //для генерации уникального uuid
 
 class gu45Op26a extends BaseGu45 {
 
-    constructor(req, xmlCfg, res) {
+    constructor(message) {
 
         //BaseGu2b
-        super(req, xmlCfg, res);
+        super(message);
 
         //HandleOp
         this.transaction = null;                                                          // "handleOp26a" "handleOp126a"
@@ -24,16 +23,16 @@ class gu45Op26a extends BaseGu45 {
         this.docTypeId = 7;
 
         //signTrackLeaveGu45Dt
-        if (typeof xmlCfg.gu_45_doc_route.operdate === 'undefined') { this.signTrackLeaveGu45Dt = "0001-01-01 00:00:00.00000+00"; }
+        if (typeof message.requestnotification.pps.operdate === 'undefined') { this.signTrackLeaveGu45Dt = "0001-01-01 00:00:00.00000+00"; }
         else {
-            this.signTrackLeaveGu45Dt = xmlCfg.gu_45_doc_route.operdate;
+            this.signTrackLeaveGu45Dt = message.requestnotification.pps.operdate;
         }
         //console.log("this.signTrackLeaveGu45Dt = " + this.signTrackLeaveGu45Dt);
 
         //epochSignTrackLeaveGu45Dt 
-        if (typeof xmlCfg.gu_45_doc_route.operdate === 'undefined') { this.epochSignTrackLeaveGu45Dt = null; }
+        if (typeof message.requestnotification.pps.operdate === 'undefined') { this.epochSignTrackLeaveGu45Dt = null; }
         else {
-            this.epochSignTrackLeaveGu45Dt = xmlCfg.gu_45_doc_route.operdate;
+            this.epochSignTrackLeaveGu45Dt = message.requestnotification.pps.operdate;
             this.a = this.epochSignTrackLeaveGu45Dt.split(" ");
             this.a[0] = this.a[0].split(".").reverse().join(".");
             this.epochSignTrackLeaveGu45Dt = this.a[0] + " " + this.a[1];

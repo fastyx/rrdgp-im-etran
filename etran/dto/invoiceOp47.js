@@ -3,10 +3,10 @@ const { v4: getuuid } = require('uuid');                   //для генера
 
 class InvoiceOp47 extends BaseInvoice {
 
-    constructor(req, xmlCfg, statusInvoice, res) {
+    constructor(message, statusInvoice) {
 
         //BaseInvoice
-        super(req, xmlCfg, statusInvoice, res);
+        super(message, statusInvoice);
 
         //HandleOp
         this.transaction = "handleOp47";
@@ -21,16 +21,16 @@ class InvoiceOp47 extends BaseInvoice {
         this.opts = null;
 
         //invDateNotification
-        if (typeof xmlCfg.invoice_doc_route.invdatenotification === 'undefined') { this.invDateNotification = "0001-01-01 00:00:00.00000+00"; }
+        if (typeof message.requestinvoice.invoice.invdatenotification === 'undefined') { this.invDateNotification = "0001-01-01 00:00:00.00000+00"; }
         else {
-            this.invDateNotification = xmlCfg.invoice_doc_route.invdatenotification.$.value;
+            this.invDateNotification = message.requestinvoice.invoice.invdatenotification.$.value;
         }
         //console.log("this.invDateNotification = " + this.invDateNotification);
 
         //epochInvDateNotification
-        if (typeof xmlCfg.invoice_doc_route.invdatenotification === 'undefined') { this.epochInvDateNotification = null; }
+        if (typeof message.requestinvoice.invoice.invdatenotification === 'undefined') { this.epochInvDateNotification = null; }
         else {
-            this.epochInvDateNotification = xmlCfg.invoice_doc_route.invdatenotification.$.value;
+            this.epochInvDateNotification = message.requestinvoice.invoice.invdatenotification.$.value;
             this.a = this.epochInvDateNotification.split(" ");
             this.a[0] = this.a[0].split(".").reverse().join(".");
             this.epochInvDateNotification = this.a[0] + " " + this.a[1];

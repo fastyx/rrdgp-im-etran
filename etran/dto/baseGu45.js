@@ -5,24 +5,28 @@ var parseString = require('xml2js').parseString;
 var DomParser = require('dom-parser');
 var parser = new DomParser();
 var xmlParse = require('xml2json');
+const checksum = require('json-checksum');
 
-class BaseGu45 extends BaseDocument {
+class BaseGu45 {
 
-    constructor(req, xmlCfg) {
+    constructor(message) {
 
         try {
 
-            //BaseDocument
-            super(req);
+            //Входной документ
+            this.inputDocument = message;                //rawBody - исходный XML документ
+
+            //Контрольная сумма
+            this.checkSum = checksum(JSON.stringify(message));         //контрольная сумма по исходному документу
 
             //idSm
-            if (typeof xmlCfg.gu_45_root_route.idsm === 'undefined') { this.idSm = null; }
-            else { this.idSm = xmlCfg.gu_45_root_route.idsm; }
+            if (typeof message.requestnotification.idsm === 'undefined') { this.idSm = null; }
+            else { this.idSm = message.requestnotification.idsm; }
             ////console.log("this.idSm = " + this.idSm);
 
             //docId
-            if (typeof xmlCfg.gu_45_doc_route.request.documentdata.docid === 'undefined') { this.docId = null; }
-            else { this.docId = xmlCfg.gu_45_doc_route.request.documentdata.docid; }
+            if (typeof message.requestnotification.pps.request.documentdata.docid === 'undefined') { this.docId = null; }
+            else { this.docId = message.requestnotification.pps.request.documentdata.docid; }
 
             //idSmDoc      
             this.idSmDoc = null;
@@ -36,7 +40,7 @@ class BaseGu45 extends BaseDocument {
             //docBase64
             //преобразуем document из base64 в utf-8 
             logger.debug("baseGu45. Преобразование Base64 в UTF-8");
-            this.docBaseUtf8 = (new Buffer.from(xmlCfg.gu_45_doc_route.request.documentdata.doccontent, 'base64')).toString('utf8');
+            this.docBaseUtf8 = (new Buffer.from(message.requestnotification.pps.request.documentdata.doccontent, 'base64')).toString('utf8');
 
             //преобразуем xml в jsonObject
             logger.debug("baseGu45. Преобразование XML(string) в JSON(object)");
@@ -59,14 +63,14 @@ class BaseGu45 extends BaseDocument {
             ////console.log("this.docNumber = " + this.docNumber);
 
             //docStateId
-            if (typeof xmlCfg.gu_45_doc_route.docstate.stateid === 'undefined') { this.docStateId = null; }
-            else { this.docStateId = xmlCfg.gu_45_doc_route.docstate.stateid; }
+            if (typeof message.requestnotification.pps.docstate.stateid === 'undefined') { this.docStateId = null; }
+            else { this.docStateId = message.requestnotification.pps.docstate.stateid; }
             ////console.log("this.docStateId = " + this.docStateId);
 
             //operDate
-            if (typeof xmlCfg.gu_45_doc_route.operdate === 'undefined') { this.operDate = null; }
+            if (typeof message.requestnotification.pps.operdate === 'undefined') { this.operDate = null; }
             else {
-                this.operDate = xmlCfg.gu_45_doc_route.operdate;
+                this.operDate = message.requestnotification.pps.operdate;
                 this.a = this.operDate.split(" ");
                 this.a[0] = this.a[0].split(".").reverse().join(".");
                 this.operDate = this.a[0] + " " + this.a[1];
@@ -75,9 +79,9 @@ class BaseGu45 extends BaseDocument {
             ////console.log("this.operDate = " + this.operDate);
 
             //epochOperDate
-            if (typeof xmlCfg.gu_45_doc_route.operdate === 'undefined') { this.epochOperDate = null; }
+            if (typeof message.requestnotification.pps.operdate === 'undefined') { this.epochOperDate = null; }
             else {
-                this.epochOperDate = xmlCfg.gu_45_doc_route.operdate;
+                this.epochOperDate = message.requestnotification.pps.operdate;
                 this.a = this.epochOperDate.split(" ");
                 this.a[0] = this.a[0].split(".").reverse().join(".");
                 this.epochOperDate = this.a[0] + " " + this.a[1];

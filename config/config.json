@@ -45,7 +45,8 @@
             "history": "rrd.history",
             "bundleHistory": "rrd.bundle_history",
             "tnOrgpassport": "nsi.tn_orgpassport",
-            "chaincodeChannels": "chaincode_channels"
+            "chaincodeChannels": "rrd.chaincode_channels",
+            "imesQueue": "rrd.imes_queue"
         },
         "dbFunctions": {
             "editTracking": "rrd.edit_tracking",

@@ -3,6 +3,7 @@ const xml = require('xml');                                 //для работ�
 const fs = require('fs');
 const logger = require('../config/logger');
 const { v4: getuuid } = require('uuid');
+const config = require(`../init_config`);
 
 const reg_init = require('../reg_init');
 
@@ -13,7 +14,7 @@ const axios = require('axios').create(axiosDefaultConfig);
 
 const insInvoiceOp = require('./crud/sqlInvoiceOp.js');
 
-exports.handleOpInvoice = async function (req, res, client, config, xmlCfg, invoice) {
+exports.handleOpInvoice = async function (invoice) {
 
     let transactions = new Array();
 
@@ -46,7 +47,7 @@ exports.handleOpInvoice = async function (req, res, client, config, xmlCfg, invo
             else {
                 reg_info = `handleOpInvoice: Ошибка. Не найден idSmInvoice в таблице ${config.SYSTEM.dbTables.bundleInvoice} по id_sm=${invoice.idSm} и inv_unp=${invoice.invUnp}`;
                 reg_init.regError(invoice.idSm, 27, invoice.checkSum, 2, 1, invoice.invoiceStateID, reg_info, sql, null, null);
-                return xml({ responseClaim: [{ status: 1 }, { message: reg_info }] });
+                return { "status": 1, "message": reg_info };
             }
         }
 

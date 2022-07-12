@@ -1,12 +1,11 @@
 const { BaseClaim } = require('./baseClaim.js')
-const { v4: getuuid } = require('uuid');                   //для генерации уникального uuid
 
 class ClaimOp2102 extends BaseClaim {
 
-    constructor(req, xmlCfg, res) {
+    constructor(message) {
 
         //BaseClaim
-        super(req, xmlCfg, res);
+        super(message);
 
         //HandleOp
         this.transaction = "handleOp2102";
@@ -18,16 +17,16 @@ class ClaimOp2102 extends BaseClaim {
         this.opts = null;
 
         //claimEndDate
-        if (typeof xmlCfg.claim_doc_route.operdate === 'undefined') { this.claimEndDate = "0001-01-01 00:00:00.00000+00"; }
+        if (typeof message.requestclaim.claim.operdate === 'undefined') { this.claimEndDate = "0001-01-01 00:00:00.00000+00"; }
         else {
-            this.claimEndDate = xmlCfg.claim_doc_route.operdate.$.value;
+            this.claimEndDate = message.requestclaim.claim.operdate.$.value;
         }
         //console.log("this.claimEndDate = " + this.claimEndDate);
 
         //epochClaimEndDate
-        if (typeof xmlCfg.claim_doc_route.operdate === 'undefined') { this.epochClaimEndDate = null; }
+        if (typeof message.requestclaim.claim.operdate === 'undefined') { this.epochClaimEndDate = null; }
         else {
-            this.epochClaimEndDate = xmlCfg.claim_doc_route.operdate.$.value;
+            this.epochClaimEndDate = message.requestclaim.claim.operdate.$.value;
             this.a = this.epochClaimEndDate.split(" ");
             this.a[0] = this.a[0].split(".").reverse().join(".");
             this.epochClaimEndDate = this.a[0] + " " + this.a[1];

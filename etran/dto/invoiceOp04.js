@@ -3,10 +3,10 @@ const { v4: getuuid } = require('uuid');                   //для генера
 
 class InvoiceOp04 extends BaseInvoice {
 
-    constructor(req, xmlCfg, statusInvoice, res) {
+    constructor(message, statusInvoice) {
 
         //BaseInvoice
-        super(req, xmlCfg, statusInvoice, res);
+        super(message, statusInvoice);
 
         //HandleOp
         this.transaction = "handleOp4";
@@ -21,16 +21,16 @@ class InvoiceOp04 extends BaseInvoice {
         this.opts = null;
 
         //invDateDeparture
-        if (typeof xmlCfg.invoice_doc_route.operdate === 'undefined') { this.invDateDeparture = "0001-01-01 00:00:00.00000+00"; }
+        if (typeof message.requestinvoice.invoice.operdate === 'undefined') { this.invDateDeparture = "0001-01-01 00:00:00.00000+00"; }
         else {
-            this.invDateDeparture = xmlCfg.invoice_doc_route.operdate.$.value;
+            this.invDateDeparture = message.requestinvoice.invoice.operdate.$.value;
         }
         //console.log("this.invDateDeparture = " + this.invDateDeparture);
 
         //epochInvDateDeparture
-        if (typeof xmlCfg.invoice_doc_route.operdate === 'undefined') { this.epochInvDateDeparture = null; }
+        if (typeof message.requestinvoice.invoice.operdate === 'undefined') { this.epochInvDateDeparture = null; }
         else {
-            this.epochInvDateDeparture = xmlCfg.invoice_doc_route.operdate.$.value;
+            this.epochInvDateDeparture = message.requestinvoice.invoice.operdate.$.value;
             this.a = this.epochInvDateDeparture.split(" ");
             this.a[0] = this.a[0].split(".").reverse().join(".");
             this.epochInvDateDeparture = this.a[0] + " " + this.a[1];
@@ -39,16 +39,16 @@ class InvoiceOp04 extends BaseInvoice {
         //console.log("this.epochInvDateDeparture = " + this.epochInvDateDeparture);
 
         //invDateExpire
-        if (typeof xmlCfg.invoice_doc_route.invdateexpire === 'undefined') { this.invDateExpire = "0001-01-01 00:00:00.00000+00"; }
+        if (typeof message.requestinvoice.invoice.invdateexpire === 'undefined') { this.invDateExpire = "0001-01-01 00:00:00.00000+00"; }
         else {
-            this.invDateExpire = xmlCfg.invoice_doc_route.invdateexpire.$.value;
+            this.invDateExpire = message.requestinvoice.invoice.invdateexpire.$.value;
         }
         //console.log("this.invDateExpire = " + this.invDateExpire);
 
         //epochInvDateExpire
-        if (typeof xmlCfg.invoice_doc_route.invdateexpire === 'undefined') { this.epochInvDateExpire = null; }
+        if (typeof message.requestinvoice.invoice.invdateexpire === 'undefined') { this.epochInvDateExpire = null; }
         else {
-            this.epochInvDateExpire = xmlCfg.invoice_doc_route.invdateexpire.$.value;
+            this.epochInvDateExpire = message.requestinvoice.invoice.invdateexpire.$.value;
             this.a = this.epochInvDateExpire.split(" ");
             this.a[0] = this.a[0].split(".").reverse().join(".");
             this.epochInvDateExpire = this.a[0] + " " + this.a[1];

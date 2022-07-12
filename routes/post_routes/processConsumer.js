@@ -7,20 +7,13 @@ const bh = require('../../etran/ConsumerHandler');
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var appRouter = async function (app) {
     app.post(`/${config.SYSTEM.restConfig.etranService.name}`, async function (req, res) {
-        
+
         const end = httpRequestDurationMicroseconds.startTimer();
         const route = req.route.path;
 
         var eventResult = `<responseClaim><status>1</status><message>Error in request process</message></responseClaim>`;   // Default response (filled manually for reliability)
         try {
-            logger.debug(JSON.stringify(config));
-
-            client = await pool.connect();
-            try {
-                eventResult = await bh.consumerHandler(req, res, client, config);
-            } finally {
-                await client.release();
-            }
+            eventResult = await bh.consumerHandler(req, res, client, config);
         } catch (e) {
             logger.error(e);
         } finally {

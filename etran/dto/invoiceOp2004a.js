@@ -3,10 +3,10 @@ const { v4: getuuid } = require('uuid');                   //для генера
 
 class InvoiceOp2004a extends BaseInvoice {
 
-    constructor(req, xmlCfg, statusInvoice, res) {
+    constructor(message, statusInvoice){
 
         //BaseInvoice
-        super(req, xmlCfg, statusInvoice, res);
+        super(message, statusInvoice);
 
         //HandleOp
         this.transaction = "handleOp2004a";
@@ -21,16 +21,16 @@ class InvoiceOp2004a extends BaseInvoice {
         this.opts = null;
 
         //emptyInvPresentingDate
-        if (typeof xmlCfg.invoice_doc_route.operdate === 'undefined') { this.emptyInvPresentingDate = "0001-01-01 00:00:00.00000+00"; }
+        if (typeof message.requestinvoice.invoice.operdate === 'undefined') { this.emptyInvPresentingDate = "0001-01-01 00:00:00.00000+00"; }
         else {
-            this.emptyInvPresentingDate = xmlCfg.invoice_doc_route.operdate.$.value;
+            this.emptyInvPresentingDate = message.requestinvoice.invoice.operdate.$.value;
         }
         //console.log("this.emptyInvPresentingDate = " + this.emptyInvPresentingDate);
 
         //epochEmptyInvPresentingDate
-        if (typeof xmlCfg.invoice_doc_route.operdate === 'undefined') { this.epochEmptyInvPresentingDate = null; }
+        if (typeof message.requestinvoice.invoice.operdate === 'undefined') { this.epochEmptyInvPresentingDate = null; }
         else {
-            this.epochEmptyInvPresentingDate = xmlCfg.invoice_doc_route.operdate.$.value;
+            this.epochEmptyInvPresentingDate = message.requestinvoice.invoice.operdate.$.value;
             this.a = this.epochEmptyInvPresentingDate.split(" ");
             this.a[0] = this.a[0].split(".").reverse().join(".");
             this.epochEmptyInvPresentingDate = this.a[0] + " " + this.a[1];

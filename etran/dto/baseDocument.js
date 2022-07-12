@@ -3,14 +3,14 @@ const logger = require('../../config/logger');
 
 class BaseDocument {
 
-    constructor(req) {
+    constructor(message) {
         try {
 
             //Входной документ
-            this.inputDocument = req.rawBody;                //rawBody - исходный XML документ
+            this.inputDocument = message;                //rawBody - исходный XML документ
 
             //Контрольная сумма
-            this.checkSum = checksum(req.rawBody);         //контрольная сумма по исходному документу
+            this.checkSum = checksum(message);         //контрольная сумма по исходному документу
         }
         catch (e) {
             logger.error(`baseDocument: ошибка парсинга базовых показателей document`);

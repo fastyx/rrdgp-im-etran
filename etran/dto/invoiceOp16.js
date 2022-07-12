@@ -3,10 +3,10 @@ const { v4: getuuid } = require('uuid');                   //для генера
 
 class InvoiceOp16 extends BaseInvoice {
 
-    constructor(req, xmlCfg, statusInvoice, res) {
+    constructor(message, statusInvoice) {
 
         //BaseInvoice
-        super(req, xmlCfg, statusInvoice, res);
+        super(message, statusInvoice);
 
         //Уникальный номер idSmInvoice
         this.idSmInvoice = getuuid();
@@ -21,16 +21,16 @@ class InvoiceOp16 extends BaseInvoice {
         this.opts = null;
 
         //ladenInvoicePresentingDate
-        if (typeof xmlCfg.invoice_doc_route.operdate === 'undefined') { this.ladenInvoicePresentingDate = "0001-01-01 00:00:00.00000+00"; }
+        if (typeof message.requestinvoice.invoice.operdate === 'undefined') { this.ladenInvoicePresentingDate = "0001-01-01 00:00:00.00000+00"; }
         else {
-            this.ladenInvoicePresentingDate = xmlCfg.invoice_doc_route.operdate.$.value;
+            this.ladenInvoicePresentingDate = message.requestinvoice.invoice.operdate.$.value;
         }
         //console.log("this.ladenInvoicePresentingDate = " + this.ladenInvoicePresentingDate);
 
         //epochLadenInvoicePresentingDate
-        if (typeof xmlCfg.invoice_doc_route.operdate === 'undefined') { this.epochLadenInvoicePresentingDate = null; }
+        if (typeof message.requestinvoice.invoice.operdate === 'undefined') { this.epochLadenInvoicePresentingDate = null; }
         else {
-            this.epochLadenInvoicePresentingDate = xmlCfg.invoice_doc_route.operdate.$.value;
+            this.epochLadenInvoicePresentingDate = message.requestinvoice.invoice.operdate.$.value;
             this.a = this.epochLadenInvoicePresentingDate.split(" ");
             this.a[0] = this.a[0].split(".").reverse().join(".");
             this.epochLadenInvoicePresentingDate = this.a[0] + " " + this.a[1];

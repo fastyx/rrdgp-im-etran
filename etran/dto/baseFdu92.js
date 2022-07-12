@@ -1,15 +1,18 @@
 const { v4: getuuid } = require('uuid');
-const { BaseDocument } = require('./baseDocument.js')
 const logger = require('../../config/logger');
+const checksum = require('json-checksum');
 
-class BaseFdu92 extends BaseDocument {
+class BaseFdu92 {
 
-    constructor(req, xmlCfg) {
+    constructor(message) {
 
         try {
 
-            //BaseDocument
-            super(req);
+            //Входной документ
+            this.inputDocument = message;                //rawBody - исходный XML документ
+
+            //Контрольная сумма
+            this.checkSum = checksum(JSON.stringify(message));         //контрольная сумма по исходному документу
 
             //HandleOp
             this.transaction = "handleDoc";   //ФДУ-92
@@ -27,8 +30,8 @@ class BaseFdu92 extends BaseDocument {
             this.opts = null;
 
             //idSm
-            if (typeof xmlCfg.fdu_92_root_route.idsm === 'undefined') { this.idSm = null; }
-            else { this.idSm = xmlCfg.fdu_92_root_route.idsm; }
+            if (typeof message.requestnotification.idsm === 'undefined') { this.idSm = null; }
+            else { this.idSm = message.requestnotification.idsm; }
             //console.log("this.idSm = " + this.idSm);
 
             //idSmDoc      
@@ -38,19 +41,19 @@ class BaseFdu92 extends BaseDocument {
             this.docTypeId = -9;
 
             //docId
-            if (typeof xmlCfg.fdu_92_doc_route.cumid === 'undefined') { this.docId = null; }
-            else { this.docId = xmlCfg.fdu_92_doc_route.cumid.$.value; }
+            if (typeof message.requestnotification.cum.cumid === 'undefined') { this.docId = null; }
+            else { this.docId = message.requestnotification.cum.cumid.$.value; }
             //console.log("this.docId = " + this.docId);
 
             //docNumber
-            if (typeof xmlCfg.fdu_92_doc_route.cumnumber === 'undefined') { this.docNumber = null; }
-            else { this.docNumber = xmlCfg.fdu_92_doc_route.cumnumber.$.value; }
+            if (typeof message.requestnotification.cum.cumnumber === 'undefined') { this.docNumber = null; }
+            else { this.docNumber = message.requestnotification.cum.cumnumber.$.value; }
             //console.log("this.docNumber = " + this.docNumber);
 
             //operDate
-            if (typeof xmlCfg.fdu_92_doc_route.operdate === 'undefined') { this.operDate = null; }
+            if (typeof message.requestnotification.cum.operdate === 'undefined') { this.operDate = null; }
             else {
-                this.operDate = xmlCfg.fdu_92_doc_route.operdate.$.value;
+                this.operDate = message.requestnotification.cum.operdate.$.value;
                 this.a = this.operDate.split(" ");
                 this.a[0] = this.a[0].split(".").reverse().join(".");
                 this.operDate = this.a[0] + " " + this.a[1];
@@ -59,13 +62,13 @@ class BaseFdu92 extends BaseDocument {
             //console.log("this.operDate = " + this.operDate);
 
             //payerOKPO
-            if (typeof xmlCfg.fdu_92_doc_route.cumpayerokpo === 'undefined') { this.payerOKPO = null; }
-            else { this.payerOKPO = xmlCfg.fdu_92_doc_route.cumpayerokpo.$.value; }
+            if (typeof message.requestnotification.cum.cumpayerokpo === 'undefined') { this.payerOKPO = null; }
+            else { this.payerOKPO = message.requestnotification.cum.cumpayerokpo.$.value; }
             //console.log("this.vpuState = " + this.vpuState);
 
             //vpuStateId
-            if (typeof xmlCfg.fdu_92_doc_route.cumstateid === 'undefined') { this.vpuStateId = null; }
-            else { this.vpuStateId = xmlCfg.fdu_92_doc_route.cumstateid.$.value; }
+            if (typeof message.requestnotification.cum.cumstateid === 'undefined') { this.vpuStateId = null; }
+            else { this.vpuStateId = message.requestnotification.cum.cumstateid.$.value; }
             //console.log("this.vpuStateId = " + this.vpuStateId);
 
             // массиве car ~ cumDue
@@ -76,40 +79,40 @@ class BaseFdu92 extends BaseDocument {
             this.invNumber = new Array();
             this.invoiceID = new Array();
             this.dueInfo = new Array();
-            if (typeof xmlCfg.fdu_92_doc_route.cumdue === 'undefined') {
+            if (typeof message.requestnotification.cum.cumdue === 'undefined') {
                 this.cumDue = [];
             }
             else {
-                if (Array.isArray(xmlCfg.fdu_92_doc_route.cumdue)) {
-                    for (let i = 0; i < xmlCfg.fdu_92_doc_route.cumdue.length; i++) {
+                if (Array.isArray(message.requestnotification.cum.cumdue)) {
+                    for (let i = 0; i < message.requestnotification.cum.cumdue.length; i++) {
                         //dueDateAmount
-                        if (typeof xmlCfg.fdu_92_doc_route.cumdue[i].duedate === 'undefined') { this.dueDateAmount[i] = null; }
-                        else { this.dueDateAmount[i] = xmlCfg.fdu_92_doc_route.cumdue[i].duedate.$.value; }
+                        if (typeof message.requestnotification.cum.cumdue[i].duedate === 'undefined') { this.dueDateAmount[i] = null; }
+                        else { this.dueDateAmount[i] = message.requestnotification.cum.cumdue[i].duedate.$.value; }
                         //console.log(`dueDateAmount[i] = ${this.dueDateAmount[i]} `);
 
                         //dueTypeCode
-                        if (typeof xmlCfg.fdu_92_doc_route.cumdue[i].duecode === 'undefined') { this.dueTypeCode[i] = null; }
-                        else { this.dueTypeCode[i] = xmlCfg.fdu_92_doc_route.cumdue[i].duecode.$.value; }
+                        if (typeof message.requestnotification.cum.cumdue[i].duecode === 'undefined') { this.dueTypeCode[i] = null; }
+                        else { this.dueTypeCode[i] = message.requestnotification.cum.cumdue[i].duecode.$.value; }
                         //console.log(`dueTypeCode[i] = ${this.dueTypeCode[i]} `);
 
                         //dueAmount
-                        if (typeof xmlCfg.fdu_92_doc_route.cumdue[i].duesum === 'undefined') { this.dueAmount[i] = null; }
-                        else { this.dueAmount[i] = xmlCfg.fdu_92_doc_route.cumdue[i].duesum.$.value; }
+                        if (typeof message.requestnotification.cum.cumdue[i].duesum === 'undefined') { this.dueAmount[i] = null; }
+                        else { this.dueAmount[i] = message.requestnotification.cum.cumdue[i].duesum.$.value; }
                         //console.log(`dueAmount[i] = ${this.dueAmount[i]} `);
 
                         //invNumber
-                        if (typeof xmlCfg.fdu_92_doc_route.cumdue[i].dueparentdocnum === 'undefined') { this.invNumber[i] = null; }
-                        else { this.invNumber[i] = xmlCfg.fdu_92_doc_route.cumdue[i].dueparentdocnum.$.value; }
+                        if (typeof message.requestnotification.cum.cumdue[i].dueparentdocnum === 'undefined') { this.invNumber[i] = null; }
+                        else { this.invNumber[i] = message.requestnotification.cum.cumdue[i].dueparentdocnum.$.value; }
                         //console.log(`invNumber[i] = ${this.invNumber[i]} `);
 
                         //invoiceID
-                        if (typeof xmlCfg.fdu_92_doc_route.cumdue[i].dueparentdocid === 'undefined') { this.invoiceID[i] = null; }
-                        else { this.invoiceID[i] = xmlCfg.fdu_92_doc_route.cumdue[i].dueparentdocid.$.value; }
+                        if (typeof message.requestnotification.cum.cumdue[i].dueparentdocid === 'undefined') { this.invoiceID[i] = null; }
+                        else { this.invoiceID[i] = message.requestnotification.cum.cumdue[i].dueparentdocid.$.value; }
                         //console.log(`invoiceID[i] = ${this.invoiceID[i]} `);
 
                         // dueInfo 
-                        if (typeof xmlCfg.fdu_92_doc_route.cumdue[i].dueinfo === 'undefined') { this.dueInfo[i] = null; }
-                        else { this.dueInfo[i] = xmlCfg.fdu_92_doc_route.cumdue[i].dueinfo.$.value; }
+                        if (typeof message.requestnotification.cum.cumdue[i].dueinfo === 'undefined') { this.dueInfo[i] = null; }
+                        else { this.dueInfo[i] = message.requestnotification.cum.cumdue[i].dueinfo.$.value; }
                         //console.log(`dueInfo[i] = ${this.dueInfo[i]} `);
 
                         this.cumDue[i] = {
@@ -125,33 +128,33 @@ class BaseFdu92 extends BaseDocument {
                 else {
                     let i = 0;
                     //dueDateAmount
-                    if (typeof xmlCfg.fdu_92_doc_route.cumdue.duedate === 'undefined') { this.dueDateAmount[i] = null; }
-                    else { this.dueDateAmount[i] = xmlCfg.fdu_92_doc_route.cumdue.duedate.$.value; }
+                    if (typeof message.requestnotification.cum.cumdue.duedate === 'undefined') { this.dueDateAmount[i] = null; }
+                    else { this.dueDateAmount[i] = message.requestnotification.cum.cumdue.duedate.$.value; }
                     //console.log(`dueDateAmount[i] = ${this.dueDateAmount[i]} `);
 
                     //dueTypeCode
-                    if (typeof xmlCfg.fdu_92_doc_route.cumdue.duecode === 'undefined') { this.dueTypeCode[i] = null; }
-                    else { this.dueTypeCode[i] = xmlCfg.fdu_92_doc_route.cumdue.duecode.$.value; }
+                    if (typeof message.requestnotification.cum.cumdue.duecode === 'undefined') { this.dueTypeCode[i] = null; }
+                    else { this.dueTypeCode[i] = message.requestnotification.cum.cumdue.duecode.$.value; }
                     //console.log(`dueTypeCode[i] = ${this.dueTypeCode[i]} `);
 
                     //dueAmount
-                    if (typeof xmlCfg.fdu_92_doc_route.cumdue.duesum === 'undefined') { this.dueAmount[i] = null; }
-                    else { this.dueAmount[i] = xmlCfg.fdu_92_doc_route.cumdue.duesum.$.value; }
+                    if (typeof message.requestnotification.cum.cumdue.duesum === 'undefined') { this.dueAmount[i] = null; }
+                    else { this.dueAmount[i] = message.requestnotification.cum.cumdue.duesum.$.value; }
                     //console.log(`dueAmount[i] = ${this.dueAmount[i]} `);
 
                     //invNumber
-                    if (typeof xmlCfg.fdu_92_doc_route.cumdue.dueparentdocnum === 'undefined') { this.invNumber[i] = null; }
-                    else { this.invNumber[i] = xmlCfg.fdu_92_doc_route.cumdue.dueparentdocnum.$.value; }
+                    if (typeof message.requestnotification.cum.cumdue.dueparentdocnum === 'undefined') { this.invNumber[i] = null; }
+                    else { this.invNumber[i] = message.requestnotification.cum.cumdue.dueparentdocnum.$.value; }
                     //console.log(`invNumber[i] = ${this.invNumber[i]} `);
 
                     //invoiceID
-                    if (typeof xmlCfg.fdu_92_doc_route.cumdue.dueparentdocid === 'undefined') { this.invoiceID[i] = null; }
-                    else { this.invoiceID[i] = xmlCfg.fdu_92_doc_route.cumdue.dueparentdocid.$.value; }
+                    if (typeof message.requestnotification.cum.cumdue.dueparentdocid === 'undefined') { this.invoiceID[i] = null; }
+                    else { this.invoiceID[i] = message.requestnotification.cum.cumdue.dueparentdocid.$.value; }
                     //console.log(`invoiceID[i] = ${this.invoiceID[i]} `);
 
                     // dueInfo 
-                    if (typeof xmlCfg.fdu_92_doc_route.cumdue.dueinfo === 'undefined') { this.dueInfo[i] = null; }
-                    else { this.dueInfo[i] = xmlCfg.fdu_92_doc_route.cumdue.dueinfo.$.value; }
+                    if (typeof message.requestnotification.cum.cumdue.dueinfo === 'undefined') { this.dueInfo[i] = null; }
+                    else { this.dueInfo[i] = message.requestnotification.cum.cumdue.dueinfo.$.value; }
                     //console.log(`dueInfo[i] = ${this.dueInfo[i]} `);
 
                     this.cumDue[i] = {
@@ -170,13 +173,13 @@ class BaseFdu92 extends BaseDocument {
             this.carNumber = new Array();
             this.idSmCar = new Array();
             this.car = new Array();
-            if (typeof xmlCfg.fdu_92_doc_route.cumcar === 'undefined') {
+            if (typeof message.requestnotification.cum.cumcar === 'undefined') {
                 this.car = [];
             }
             else {
-                if (Array.isArray(xmlCfg.fdu_92_doc_route.cumcar)) {
-                    for (let i = 0; i < xmlCfg.fdu_92_doc_route.cumcar.length; i++) {
-                        if (typeof xmlCfg.fdu_92_doc_route.cumcar[i].carnumber === 'undefined') {
+                if (Array.isArray(message.requestnotification.cum.cumcar)) {
+                    for (let i = 0; i < message.requestnotification.cum.cumcar.length; i++) {
+                        if (typeof message.requestnotification.cum.cumcar[i].carnumber === 'undefined') {
                             this.carNumber[i] = null;
                             this.idSmCar[i] = null;
                             this.car[i] = {
@@ -185,7 +188,7 @@ class BaseFdu92 extends BaseDocument {
                             };
                         }
                         else {
-                            this.carNumber[i] = xmlCfg.fdu_92_doc_route.cumcar[i].carnumber.$.value;
+                            this.carNumber[i] = message.requestnotification.cum.cumcar[i].carnumber.$.value;
                             this.idSmCar[i] = getuuid();
                             this.car[i] = {
                                 carNumber: this.carNumber[i],
@@ -197,7 +200,7 @@ class BaseFdu92 extends BaseDocument {
                 else {
                     let i = 0;
 
-                    if (typeof xmlCfg.fdu_92_doc_route.cumcar.carnumber === 'undefined') {
+                    if (typeof message.requestnotification.cum.cumcar.carnumber === 'undefined') {
                         this.carNumber[i] = null;
                         this.idSmCar[i] = null;
                         this.car[i] = {
@@ -206,7 +209,7 @@ class BaseFdu92 extends BaseDocument {
                         };
                     }
                     else {
-                        this.carNumber[i] = xmlCfg.fdu_92_doc_route.cumcar.carnumber.$.value;
+                        this.carNumber[i] = message.requestnotification.cum.cumcar.carnumber.$.value;
                         this.idSmCar[i] = getuuid();
                         this.car[i] = {
                             carNumber: this.carNumber[i],

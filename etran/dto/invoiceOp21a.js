@@ -3,10 +3,10 @@ const { v4: getuuid } = require('uuid');                   //для генера
 
 class InvoiceOp21a extends BaseInvoice {
 
-    constructor(req, xmlCfg, statusInvoice, res) {
+    constructor(message, statusInvoice) {
 
         //BaseInvoice
-        super(req, xmlCfg, statusInvoice, res);
+        super(message, statusInvoice);
 
         //HandleOp
         this.transaction = "handleOp21a";
@@ -21,16 +21,16 @@ class InvoiceOp21a extends BaseInvoice {
         this.opts = null;
 
         //invFactDateAccept
-        if (typeof xmlCfg.invoice_doc_route.invfactdateaccept === 'undefined') { this.invFactDateAccept = "0001-01-01 00:00:00.00000+00"; }
+        if (typeof message.requestinvoice.invoice.invfactdateaccept === 'undefined') { this.invFactDateAccept = "0001-01-01 00:00:00.00000+00"; }
         else {
-            this.invFactDateAccept = xmlCfg.invoice_doc_route.invfactdateaccept.$.value;
+            this.invFactDateAccept = message.requestinvoice.invoice.invfactdateaccept.$.value;
         }
         //console.log("this.invFactDateAccept = " + this.invFactDateAccept);
 
         //epochInvFactDateAccept
-        if (typeof xmlCfg.invoice_doc_route.invfactdateaccept === 'undefined') { this.epochInvFactDateAccept = null; }
+        if (typeof message.requestinvoice.invoice.invfactdateaccept === 'undefined') { this.epochInvFactDateAccept = null; }
         else {
-            this.epochInvFactDateAccept = xmlCfg.invoice_doc_route.invfactdateaccept.$.value;
+            this.epochInvFactDateAccept = message.requestinvoice.invoice.invfactdateaccept.$.value;
             this.a = this.epochInvFactDateAccept.split(" ");
             this.a[0] = this.a[0].split(".").reverse().join(".");
             this.epochInvFactDateAccept = this.a[0] + " " + this.a[1];
