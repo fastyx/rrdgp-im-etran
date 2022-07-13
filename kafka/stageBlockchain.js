@@ -13,7 +13,7 @@ exports.stageBlockchain = async function (jsonObject) {
             response = await axios.post(`http://${config.SYSTEM.restConfig.invoke.host}:${config.SYSTEM.restConfig.invoke.port}/${config.SYSTEM.restConfig.invoke.name}`, message)
 
             if (response.data.code !== 0) {
-                console.log(response)
+                //console.log(response)
                 success = false;
             }
         }

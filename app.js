@@ -34,8 +34,7 @@ app.listen(config.SYSTEM.restConfig.etranService.port, async () => {
     client = await pool.connect();
 
     let httpRequestDurationMicroseconds = null;
-    let isRun = false;
-    //require("./routes/get_routes/prom.js")(app, httpRequestDurationMicroseconds);
+    require("./routes/get_routes/prom.js")(app, httpRequestDurationMicroseconds);
     //require("./routes/post_routes/processConsumer.js")(app, httpRequestDurationMicroseconds);
     require("./routes/post_routes/processProducer.js")(app);
     require("./routes/get_routes/isrun.js")(app);
