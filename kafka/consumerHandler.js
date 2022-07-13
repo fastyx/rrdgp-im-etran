@@ -25,7 +25,7 @@ cron.schedule('* * * * * *', async () => {
             const result_preparing = await client.query(sql_imesGetNext, [config.MAIN.system, config.stages.preparing]);
             if (result_preparing.rowCount !== 0) {
                 for (row of result_preparing.rows) {
-                    console.log("Строка result_preparing")
+                    //console.log("Строка result_preparing")
 
                     let jsonObject = JSON.parse(row.imes_body_ext);
                     let result = await stagePreparing.stagePreparing(jsonObject);
@@ -38,7 +38,7 @@ cron.schedule('* * * * * *', async () => {
             const result_database = await client.query(sql_imesGetNext, [config.MAIN.system, config.stages.database]);
             if (result_database.rowCount !== 0) {
                 for (row of result_database.rows) {
-                    console.log("Строка result_database")
+                    //console.log("Строка result_database")
 
                     let jsonObject = JSON.parse(row.imes_body_ext);
                     let result = await stageDatabase.stageDatabase(jsonObject);
@@ -51,7 +51,7 @@ cron.schedule('* * * * * *', async () => {
             const result_channel = await client.query(sql_imesGetNext, [config.MAIN.system, config.stages.channel]);
             if (result_channel.rowCount !== 0) {
                 for (row of result_channel.rows) {
-                    console.log("Строка result_channel")
+                    //console.log("Строка result_channel")
 
                     let jsonObject = JSON.parse(row.imes_body_ext);
                     let result = await stageChannel.stageChannel(jsonObject);
@@ -64,7 +64,7 @@ cron.schedule('* * * * * *', async () => {
             const result_blockchain = await client.query(sql_imesGetNext, [config.MAIN.system, config.stages.blockchain]);
             if (result_blockchain.rowCount !== 0) {
                 for (row of result_blockchain.rows) {
-                    console.log("Строка result_blockchain")
+                    //console.log("Строка result_blockchain")
 
                     let jsonObject = JSON.parse(row.imes_body_ext);
                     let result = await stageBlockchain.stageBlockchain(jsonObject);
@@ -77,7 +77,7 @@ cron.schedule('* * * * * *', async () => {
             const result_violation = await client.query(sql_imesGetNext, [config.MAIN.system, config.stages.violation]);
             if (result_violation.rowCount !== 0) {
                 for (row of result_violation.rows) {
-                    console.log("Строка result_violation")
+                    //console.log("Строка result_violation")
 
                     let jsonObject = JSON.parse(row.imes_body_ext);
                     let result = await stageViolation.stageViolation(jsonObject);
@@ -88,6 +88,7 @@ cron.schedule('* * * * * *', async () => {
             }
         } catch (e) {
             console.log(e)
+            logger.error(e)
         } finally {
             isRun = false;
         }

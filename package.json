@@ -1,6 +1,6 @@
 {
   "name": "rrdgp_etran_im",
-  "version": "1.0.103",
+  "version": "2.0.1",
   "description": "",
   "main": "app.js",
   "dependencies": {

@@ -1,8 +1,17 @@
 {
     "MAIN": {
-        "version": "1.0.103"
+        "version": "2.0.1",
+        "system": 1
     },
     "defaultChannel": "appchannel220622",
+    "stages": {
+        "preparing": 100,
+        "database": 200,
+        "channel": 300,
+        "blockchain": 400,
+        "violation": 500,
+        "end": 0
+    },
     "SYSTEM": {
         "dbTables": {
             "bundleClaim": "rrd.bundle_claim",
@@ -34,7 +43,10 @@
             "regSql": "rrd.reg_sql",
             "dues": "rrd.dues",
             "history": "rrd.history",
-            "bundleHistory": "rrd.bundle_history"
+            "bundleHistory": "rrd.bundle_history",
+            "tnOrgpassport": "nsi.tn_orgpassport",
+            "chaincodeChannels": "rrd.chaincode_channels",
+            "imesQueue": "rrd.imes_queue"
         },
         "dbFunctions": {
             "editTracking": "rrd.edit_tracking",
@@ -54,7 +66,7 @@
             }
         },
         "dbConfig": {
-            "max": 1,
+            "max": 3,
             "idleTimeoutMillis": 30000,
             "connectionTimeoutMillis": 2000
         },
@@ -69,11 +81,41 @@
                 "port": "3030",
                 "name": "api/etran/claim"
             },
+            "channel": {
+                "host": "10.39.105.37",
+                "port": "3003",
+                "name": "v1/channel"
+            },
             "isrun": {
                 "name": "appinfo/isrun"
             }
         },
-        "privateCollection": "CollTest2",
-        "loggerLevel": "info"
+        "privateCollection": "_implicit_org_Org1MSP",
+        "loggerLevel": "info",
+        "kafkaConfig": {
+            "producer": {
+                "active": false,
+                "status": 0,
+                "nodes": "192.168.8.121:9092, 192.168.8.97:9092"
+            },
+            "consumer": {
+                "active": false,
+                "nodes": "192.168.8.121:9092, 192.168.8.97:9092",
+                "options": {
+                    "topic": "etranTopic",
+                    "offset": 0,
+                    "partition": 0,
+                    "autoCommit": false,
+                    "autoCommitIntervalMs": 5000,
+                    "fetchMinBytes": 1,
+                    "groupId": "kafka-etran",
+                    "fetchMaxWaitMs": 100,
+                    "fetchMaxBytes": 37748736,
+                    "fromOffset": true,
+                    "encoding": "utf8",
+                    "keyEncoding": "utf8"
+                }
+            }
+        }
     }
 }
